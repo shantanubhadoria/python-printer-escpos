@@ -1,0 +1,3 @@
+[console_scripts]
+pyb_ = pybuilder.cli:main
+

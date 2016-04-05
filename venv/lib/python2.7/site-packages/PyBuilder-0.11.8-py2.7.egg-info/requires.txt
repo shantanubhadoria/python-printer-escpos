@@ -1,0 +1,3 @@
+pip>=7.0
+tblib
+wheel

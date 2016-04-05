@@ -1,0 +1,10 @@
+#!/home/shantanu/git/python-printer-escpos/venv/bin/python
+# EASY-INSTALL-ENTRY-SCRIPT: 'PyBuilder==0.11.8','console_scripts','pyb_'
+__requires__ = 'PyBuilder==0.11.8'
+import sys
+from pkg_resources import load_entry_point
+
+if __name__ == '__main__':
+    sys.exit(
+        load_entry_point('PyBuilder==0.11.8', 'console_scripts', 'pyb_')()
+    )
