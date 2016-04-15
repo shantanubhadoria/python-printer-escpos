@@ -13,7 +13,7 @@ class USBTest(unittest.TestCase):
     """
 
     @classmethod
-    def setUp(cls):
+    def setUpClass(cls):
         cls.USBPrinterClass = getUSBPrinter()
         cls.printer = cls.USBPrinterClass(idVendor=0x1504, idProduct=0x0006)
 
@@ -27,7 +27,7 @@ class USBTest(unittest.TestCase):
         cls.printer._write(msg="TEST\n")
 
     def test__image(cls):
-        cls.printer.image('corpus/images/cbpm.gif')
+        cls.printer.image('corpus/images/coastes.gif')
 
     def test__qr(cls):
         cls.printer.qr('My name is Shantanu Bhadoria')
@@ -36,5 +36,5 @@ class USBTest(unittest.TestCase):
         cls.printer.barcode(text='Shantanu', textPosition='above')
 
     @classmethod
-    def tearDown(cls):
+    def tearDownClass(cls):
         cls.printer.__del__
