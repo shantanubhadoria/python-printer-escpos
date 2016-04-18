@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>escpos package &mdash; python-escpos 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="python-escpos 0.0.1a documentation" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="escpos-package">
+<h1>escpos package<a class="headerlink" href="#escpos-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="escpos.commandset.html">escpos.commandset package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="escpos.commandset.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="escpos.commandset.html#module-escpos.commandset.generic">escpos.commandset.generic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="escpos.commandset.html#module-escpos.commandset">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-escpos.USB">
+<span id="escpos-usb-module"></span><h2>escpos.USB module<a class="headerlink" href="#module-escpos.USB" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="escpos.USB.getUSBPrinter">
+<code class="descclassname">escpos.USB.</code><code class="descname">getUSBPrinter</code><span class="sig-paren">(</span><em>commandSet='Generic'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/USB.html#getUSBPrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.USB.getUSBPrinter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>commandSet</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Command set to load from <strong>escpos.commandset.*</strong> namespace (default: &#8216;Generic&#8217;)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">USBPrinter Class</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="escpos.USB.USBPrinter">
+<em class="property">class </em><code class="descclassname">escpos.USB.</code><code class="descname">USBPrinter</code><a class="headerlink" href="#escpos.USB.USBPrinter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>idVendor</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; 2 byte int(Can be provided in hex representation like 0x1504). Vendor Id for the USB         Device.</li>
+<li><strong>idProduct</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; 2 byte int(Can be provided in hex representation like 0x0006). Product Id for the USB         Device.</li>
+<li><strong>interface</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; <p>number(hex), USB Input end point             Retrieve this value with the following command on UNIX like OSes (default: 0)</p>
+<p><code class="docutils literal"><span class="pre">lsusb</span> <span class="pre">-vvv</span> <span class="pre">-d</span> <span class="pre">&lt;vendorId</span> <span class="pre">in</span> <span class="pre">hex&gt;:&lt;productId</span> <span class="pre">in</span> <span class="pre">hex&gt;</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">iInterface</span></code></p>
+</li>
+<li><strong>inputEndPoint</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; <p>1 byte int(Can be provided in hex representation like 0x82), USB Input         end point. Retrieve this value with the following command on UNIX like OSes (default: 0x82)</p>
+<p><code class="docutils literal"><span class="pre">lsusb</span> <span class="pre">-vvv</span> <span class="pre">-d</span> <span class="pre">&lt;vendorId</span> <span class="pre">in</span> <span class="pre">hex&gt;:&lt;productId</span> <span class="pre">in</span> <span class="pre">hex&gt;</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">bEndpointAddress</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">IN</span></code></p>
+</li>
+<li><strong>outputEndPoint</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; <p>1 byte int(Can be provided in hex representation like 0x01), USB Output         end point. Retrieve this value with the following command on UNIX like OSes (default: 0x01)</p>
+<p><code class="docutils literal"><span class="pre">lsusb</span> <span class="pre">-vvv</span> <span class="pre">-d</span> <span class="pre">&lt;vendorId</span> <span class="pre">in</span> <span class="pre">hex&gt;:&lt;productId</span> <span class="pre">in</span> <span class="pre">hex&gt;</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">bEndpointAddress</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">OUT</span></code></p>
+</li>
+<li><strong>initialize</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Call initialize() function to reset the printer to default status.(default: True)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">USBPrinter object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Return USB Printer Class with the specified command set in the <strong>escpos.commandset.*</strong> namespace.</p>
+<p><strong>Usage</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printer</span> <span class="o">=</span> <span class="n">getUSBPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">)(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x1504</span><span class="p">,</span> <span class="n">idProduct</span><span class="o">=</span><span class="mh">0x0006</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-escpos">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-escpos" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">printer</span><span class="o">-</span><span class="n">escpos</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="escpos-printer-function-reference">
+<h3>ESCPOS printer function reference<a class="headerlink" href="#escpos-printer-function-reference" title="Permalink to this headline">¶</a></h3>
+<p>To try the complete set of default functions available for generic ESCPOS printers, refer to <a class="reference internal" href="escpos.commandset.html#module-escpos.commandset" title="escpos.commandset"><code class="xref py py-mod docutils literal"><span class="pre">escpos.commandset</span></code></a></p>
+</div>
+<div class="section" id="usb-printers">
+<h3>USB printers<a class="headerlink" href="#usb-printers" title="Permalink to this headline">¶</a></h3>
+<p>USB Printers require USB vendorID, productID, interface number, input endpoint id, output endpoint id to create a
+connection. Read on to see how to get these values for your printer and create a printer object for a USB printer</p>
+<div class="section" id="getting-vendor-id-and-product-id">
+<h4>Getting vendor id and product id<a class="headerlink" href="#getting-vendor-id-and-product-id" title="Permalink to this headline">¶</a></h4>
+<p>On Unix like OSes, run lsusb command to see a list of devices with their product id and vendor id:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ lsusb
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 003 Device 003: ID 1504:0006
+Bus 003 Device 008: ID 0cf3:0036 Atheros Communications, Inc.
+</pre></div>
+</div>
+<p>The second device in this list is the thermal printer. I know this because if I switch off the printer and run lsusb
+again that line will disappear. That tells me that the vendor id for my printer is 0x1504 and product id is 0x0006</p>
+</div>
+<div class="section" id="getting-interface-id">
+<h4>Getting interface id<a class="headerlink" href="#getting-interface-id" title="Permalink to this headline">¶</a></h4>
+<p>Following this you can get the interface number for your printer with the following command (Note
+that I used the vendorid 1504 and productid 0006 for my printer that I discovered in the previous section):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ lsusb -vvv -d 1504:0006 | grep iInterface
+      iInterface              0
+</pre></div>
+</div>
+<p>So the  interface number for my printer is 0, since the module uses a default interface number 0, I do not need to
+specify this value in my constructor</p>
+</div>
+<div class="section" id="getting-input-endpoint">
+<h4>Getting input endpoint<a class="headerlink" href="#getting-input-endpoint" title="Permalink to this headline">¶</a></h4>
+<p>Again you can use the lsusb to get the input endpoint as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep IN
+bEndpointAddress     0x81  EP 1 IN
+</pre></div>
+</div>
+<p>That gives me the input endpoint number 0x81, this is also the default for the module.</p>
+</div>
+<div class="section" id="getting-output-endpoint">
+<h4>Getting output endpoint<a class="headerlink" href="#getting-output-endpoint" title="Permalink to this headline">¶</a></h4>
+<p>You can now use the lsusb to get the output endpoint as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep OUT
+bEndpointAddress     0x01  EP 1 OUT
+</pre></div>
+</div>
+<p>That gives me the output endpoint number 0x01, this is also the default for the module.</p>
+</div>
+<div class="section" id="get-printer-object">
+<h4>Get Printer Object<a class="headerlink" href="#get-printer-object" title="Permalink to this headline">¶</a></h4>
+<p>Now that we have the connection parameters for our printer we can create the printer object as follows. We will use the
+Generic commandset to print output to the printer:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.USB</span> <span class="k">import</span> <span class="n">getUSBPrinter</span>
+
+
+<span class="n">printer</span> <span class="o">=</span> <span class="n">getUSBPrinter</span><span class="p">()(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x1504</span><span class="p">,</span> <span class="n">idProduct</span><span class="o">=</span><span class="mh">0x0006</span><span class="p">)</span>  <span class="c1"># USB vendor and product Ids for Bixolon SRP-350plus</span>
+                                                              <span class="c1"># printer</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To see the full range of printer functions available for Generic ESCPOS printers see escpos.commandset.generic</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">escpos package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-escpos.USB">escpos.USB module</a></li>
+<li><a class="reference internal" href="#module-escpos">Module contents</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#escpos-printer-function-reference">ESCPOS printer function reference</a></li>
+<li><a class="reference internal" href="#usb-printers">USB printers</a><ul>
+<li><a class="reference internal" href="#getting-vendor-id-and-product-id">Getting vendor id and product id</a></li>
+<li><a class="reference internal" href="#getting-interface-id">Getting interface id</a></li>
+<li><a class="reference internal" href="#getting-input-endpoint">Getting input endpoint</a></li>
+<li><a class="reference internal" href="#getting-output-endpoint">Getting output endpoint</a></li>
+<li><a class="reference internal" href="#get-printer-object">Get Printer Object</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/escpos.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Shantanu Bhadoria.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+    </div>
+  </body>
+</html>

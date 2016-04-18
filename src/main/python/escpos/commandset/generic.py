@@ -1,14 +1,12 @@
 """
-@author: Shantanu Bhadoria <shantanu@cpan.org>
-@copyright: Copyright (c) Shantanu Bhadoria
-@license: GPL
-
 Generic ESCPOS command set for escpos module. You can override Generic command set by writing a module specific to your
-printer model in the escpos.commandset.* namespace as escpos.commandset.examplecommands and putting a class named
-ExampleCommands in that package and define the special commands in methods of ExampleCommands class. Then when
-initializing your printer pass commandSet='ExampleCommands' to getXXXPrinter function:
+printer model in the **escpos.commandset.*** namespace as **escpos.commandset.examplecommands** and putting a class named
+**ExampleCommands** in that package and define the special commands in methods of **ExampleCommands** class. Then when
+initializing your printer pass ``commandSet='ExampleCommands'`` to getXXXPrinter function. For example to use Generic
+commandset on a USB printer::
 
-printer = new getUSBPrinter(commandSet='ExampleCommands')(idVendor=0x1504, idProduct=0x0006)
+    printer = new getUSBPrinter(commandSet='Generic')(idVendor=0x1504, idProduct=0x0006)
+
 """
 
 
@@ -23,15 +21,14 @@ import qrcode
 
 class Generic():
     """
-    Attributes
-    ----------
-    usePrintMode: bool
-                  Setting this to true makes the package keep track of font style, bold, height, width and underline
-                  statuses internally and use printmode to set these values everytime any one of them is updated. Set
-                  this to False if you prefer to set only individual text styles when you run font(), bold(), height(),
-                  width() or underline() commands
+    This is a generic(and default) commandset that works for most of the ESCPOS compliant printers.
     """
+
     # Command code configurations
+    #: Setting this to true makes the package keep track of font style, bold, height, width and underline
+    #: statuses internally and use printmode to set these values everytime any one of them is updated. Set
+    #: this to False if you prefer to set only individual text styles when you run font(), bold(), height(),
+    #: width() or underline() commands
     usePrintMode = False
     _textFont = 'a'
     _textBold = False
@@ -83,8 +80,9 @@ class Generic():
         Align printing to left, center, right or full justification. Some printers require a line feed before
         justification change for it to have effect. Always set justification at the beginning of a line.
 
-        Synopsis
-        --------
+        :param str align: Possible values 'left', 'center', 'right' or 'full' (default: 'left')
+
+        **Example**::
 
             printer.lf()
             printer.align('center')
@@ -99,10 +97,6 @@ class Generic():
             printer.align('full')
             printer.text('This text is full justified') # Only available in select models
 
-        Parameters
-        ----------
-        align : str
-                  Possible values 'left', 'center', 'right' or 'full' (default: 'left')
         """
         if align not in ['left', 'center', 'right', 'full']:
             raise ValueError('align must be \'left\', \'center\', \'right\' or \'full\'')
@@ -111,16 +105,21 @@ class Generic():
 
     def barcode(self, text="shantanu", textPosition='below', font='b', height=50, width=2, system='CODE93'):
         """
-        Print barcode
+        Prints barcode to the Printer
 
-        @param text          : Text to be printed as barcode
-        @param textPosition  : Position of Human readable text for the barcode - 'none', 'above', 'below',
-                               'aboveandbelow'
-        @param font          : font for the Human readable text - 'a' or 'b'
-        @param height        : Barcode height no of dots in vertical direction
-        @param width         : Width of barcode - 2  => 0.25mm, 3 => 0.375mm, 4 => 0.5mm, 5 => 0.625mm, 6 => 0.75mm
-        @param system        : Barcode system - 'UPC-A', 'UPC-E', 'JAN13', 'JAN8', 'CODE39', 'ITF', 'CODABAR', 'CODE93',
-                               'CODE128'
+        :param str text: Text to be printed as barcode
+        :param str textPosition: Position of Human readable text for the barcode - 'none', 'above', 'below', \
+        'aboveandbelow'
+        :param str font: font for the Human readable text - 'a' or 'b'
+        :param int height: Barcode height no of dots in vertical direction
+        :param int width: Width of barcode - 2  => 0.25mm, 3 => 0.375mm, 4 => 0.5mm, 5 => 0.625mm, 6 => 0.75mm
+        :param int system: Barcode system - 'UPC-A', 'UPC-E', 'JAN13', 'JAN8', 'CODE39', 'ITF', 'CODABAR', 'CODE93', \
+        'CODE128'
+
+        **Example**::
+
+            printer.barcode(text='Shantanu', textPosition='below', font='b', height=100, width=2, system='CODE93')
+
         """
         # Setting position of HRI text relative to the barcode
         if textPosition.lower() in self._barcode_textPositionCode.keys():
@@ -155,6 +154,12 @@ class Generic():
 
         # Print the barcode
         self._write(chr(len(text)) + text)
+
+    def beep(self):
+        """
+        Make the printer make a beep, this is supported on almost all printers with beepers
+        """
+        self._write('\x07')
 
     def bold(self, bold=True):
         """
@@ -649,7 +654,7 @@ class Generic():
             chrPositions += chr(position)
         self.write(self._ESC + 'D' + chrPositions + chr(0))
 
-    def textSize(self, textHeight=1, textWidth=1):
+    def textSize(self, height=1, width=1):
         """
         Sets font text Size. Note that many printers will not support the full range of text heights and widths, e.g.
         many models may only support a maximum height and width of 8
@@ -665,17 +670,17 @@ class Generic():
 
         Parameters
         ----------
-        textHeight : int
+        height : int
                Text height, range from 1 to 16 (default: 0)
-        textWidth : int
+        width : int
                Text width, range from 1 to 16 (default: 0)
         """
-        if not(0 < textHeight < 17) or type(textHeight) is not int:
-            raise ValueError('textHeight must be a int between 1 and 16')
-        if not(0 < textWidth < 17) or type(textWidth) is not int:
+        if not(0 < height < 17) or type(height) is not int:
+            raise ValueError('height must be a int between 1 and 16')
+        if not(0 < width < 17) or type(width) is not int:
             raise ValueError('textWidth must be a int between 1 and 16')
         else:
-            size = (textWidth - 1) << 4 | (textHeight - 1)
+            size = (width - 1) << 4 | (height - 1)
             self._write(self._GS + '!' + chr(size))
 
     def underline(self, underline=True, doubleDot=False):

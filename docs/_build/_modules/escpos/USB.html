@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>escpos.USB &mdash; python-escpos 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="python-escpos 0.0.1a documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for escpos.USB</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">usb.core</span>
+<span class="kn">import</span> <span class="nn">usb.util</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+
+
+<div class="viewcode-block" id="getUSBPrinter"><a class="viewcode-back" href="../../modules/escpos.html#escpos.USB.getUSBPrinter">[docs]</a><span class="k">def</span> <span class="nf">getUSBPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param str commandSet: Command set to load from **escpos.commandset.*** namespace (default: &#39;Generic&#39;)</span>
+
+
+<span class="sd">    :returns: USBPrinter Class</span>
+
+<span class="sd">    .. py:class:: USBPrinter</span>
+
+<span class="sd">        :param int idVendor: 2 byte int(Can be provided in hex representation like 0x1504). Vendor Id for the USB \</span>
+<span class="sd">        Device.</span>
+<span class="sd">        :param int idProduct: 2 byte int(Can be provided in hex representation like 0x0006). Product Id for the USB \</span>
+<span class="sd">        Device.</span>
+<span class="sd">        :param int interface: number(hex), USB Input end point \</span>
+<span class="sd">            Retrieve this value with the following command on UNIX like OSes (default: 0)</span>
+
+<span class="sd">            ``lsusb -vvv -d &lt;vendorId in hex&gt;:&lt;productId in hex&gt; | grep iInterface``</span>
+<span class="sd">        :param int inputEndPoint: 1 byte int(Can be provided in hex representation like 0x82), USB Input \</span>
+<span class="sd">        end point. Retrieve this value with the following command on UNIX like OSes (default: 0x82)</span>
+
+<span class="sd">            ``lsusb -vvv -d &lt;vendorId in hex&gt;:&lt;productId in hex&gt; | grep bEndpointAddress | grep IN``</span>
+<span class="sd">        :param int outputEndPoint: 1 byte int(Can be provided in hex representation like 0x01), USB Output \</span>
+<span class="sd">        end point. Retrieve this value with the following command on UNIX like OSes (default: 0x01)</span>
+
+<span class="sd">            ``lsusb -vvv -d &lt;vendorId in hex&gt;:&lt;productId in hex&gt; | grep bEndpointAddress | grep OUT``</span>
+<span class="sd">        :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
+<span class="sd">        :returns: USBPrinter object</span>
+
+
+<span class="sd">    Return USB Printer Class with the specified command set in the **escpos.commandset.*** namespace.</span>
+
+<span class="sd">    **Usage**</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        printer = getUSBPrinter(commandSet=&#39;Generic&#39;)(idVendor=0x1504, idProduct=0x0006)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">commandSetModule</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;..commandset.&#39;</span> <span class="o">+</span> <span class="n">commandSet</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">__name__</span><span class="p">)</span>
+    <span class="n">commandSetClass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">commandSetModule</span><span class="p">,</span> <span class="n">commandSet</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">USBPrinter</span><span class="p">(</span><span class="n">commandSetClass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        USB printer object</span>
+
+<span class="sd">        Inherits dynamically from printer model commandSets based on available commandSets in escpos.commandset.*</span>
+<span class="sd">        namespace by default Generic command set is loaded</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        device : USB device object</span>
+<span class="sd">                 device object on which all the write and read operations are performed</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idVendor</span><span class="p">,</span> <span class="n">idProduct</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inputEndPoint</span><span class="o">=</span><span class="mh">0x82</span><span class="p">,</span> <span class="n">outputEndPoint</span><span class="o">=</span><span class="mh">0x01</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idVendor</span> <span class="o">=</span> <span class="n">idVendor</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idProduct</span> <span class="o">=</span> <span class="n">idProduct</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputEndPoint</span> <span class="o">=</span> <span class="n">inputEndPoint</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputEndPoint</span> <span class="o">=</span> <span class="n">outputEndPoint</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">initialize</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Essentially the same as _write(), Prints text to printer</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Search device on USB tree and set it as escpos device &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">usb</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">idVendor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">idVendor</span><span class="p">,</span> <span class="n">idProduct</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">idProduct</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s2">&quot;Cable isn&#39;t plugged in&quot;</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">is_kernel_driver_active</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">detach_kernel_driver</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">usb</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">USBError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="s2">&quot;Could not detach kernel driver: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">set_configuration</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">usb</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">USBError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s2">&quot;Could not set configuration: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Print any command sent in raw format &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputEndPoint</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_raw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Print any command sent in raw format &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputEndPoint</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Read raw data from the USB device &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputEndPoint</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Release USB interface &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
+                <span class="n">usb</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">dispose_resources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="n">USBPrinter</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Shantanu Bhadoria.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+    </div>
+  </body>
+</html>

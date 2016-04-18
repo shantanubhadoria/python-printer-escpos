@@ -1,0 +1,611 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>escpos.commandset package &mdash; python-escpos 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="python-escpos 0.0.1a documentation" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="escpos-commandset-package">
+<h1>escpos.commandset package<a class="headerlink" href="#escpos-commandset-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-escpos.commandset.generic">
+<span id="escpos-commandset-generic-module"></span><h2>escpos.commandset.generic module<a class="headerlink" href="#module-escpos.commandset.generic" title="Permalink to this headline">¶</a></h2>
+<p>Generic ESCPOS command set for escpos module. You can override Generic command set by writing a module specific to your
+printer model in the <strong>escpos.commandset.*</strong> namespace as <strong>escpos.commandset.examplecommands</strong> and putting a class named
+<strong>ExampleCommands</strong> in that package and define the special commands in methods of <strong>ExampleCommands</strong> class. Then when
+initializing your printer pass <code class="docutils literal"><span class="pre">commandSet='ExampleCommands'</span></code> to getXXXPrinter function. For example to use Generic
+commandset on a USB printer:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printer</span> <span class="o">=</span> <span class="n">new</span> <span class="n">getUSBPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">)(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x1504</span><span class="p">,</span> <span class="n">idProduct</span><span class="o">=</span><span class="mh">0x0006</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="escpos.commandset.generic.Generic">
+<em class="property">class </em><code class="descclassname">escpos.commandset.generic.</code><code class="descname">Generic</code><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a generic(and default) commandset that works for most of the ESCPOS compliant printers.</p>
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.align">
+<code class="descname">align</code><span class="sig-paren">(</span><em>align='left'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.align"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align printing to left, center, right or full justification. Some printers require a line feed before
+justification change for it to have effect. Always set justification at the beginning of a line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>align</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Possible values &#8216;left&#8217;, &#8216;center&#8217;, &#8216;right&#8217; or &#8216;full&#8217; (default: &#8216;left&#8217;)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">align</span><span class="p">(</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is center aligned&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">align</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is right aligned&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">align</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is left aligned&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">align</span><span class="p">(</span><span class="s1">&#39;full&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is full justified&#39;</span><span class="p">)</span> <span class="c1"># Only available in select models</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.barcode">
+<code class="descname">barcode</code><span class="sig-paren">(</span><em>text='shantanu'</em>, <em>textPosition='below'</em>, <em>font='b'</em>, <em>height=50</em>, <em>width=2</em>, <em>system='CODE93'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.barcode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.barcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints barcode to the Printer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Text to be printed as barcode</li>
+<li><strong>textPosition</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Position of Human readable text for the barcode - &#8216;none&#8217;, &#8216;above&#8217;, &#8216;below&#8217;,         &#8216;aboveandbelow&#8217;</li>
+<li><strong>font</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; font for the Human readable text - &#8216;a&#8217; or &#8216;b&#8217;</li>
+<li><strong>height</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Barcode height no of dots in vertical direction</li>
+<li><strong>width</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Width of barcode - 2  =&gt; 0.25mm, 3 =&gt; 0.375mm, 4 =&gt; 0.5mm, 5 =&gt; 0.625mm, 6 =&gt; 0.75mm</li>
+<li><strong>system</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Barcode system - &#8216;UPC-A&#8217;, &#8216;UPC-E&#8217;, &#8216;JAN13&#8217;, &#8216;JAN8&#8217;, &#8216;CODE39&#8217;, &#8216;ITF&#8217;, &#8216;CODABAR&#8217;, &#8216;CODE93&#8217;,         &#8216;CODE128&#8217;</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printer</span><span class="o">.</span><span class="n">barcode</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;Shantanu&#39;</span><span class="p">,</span> <span class="n">textPosition</span><span class="o">=</span><span class="s1">&#39;below&#39;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="s1">&#39;CODE93&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.beep">
+<code class="descname">beep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.beep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.beep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the printer make a beep, this is supported on almost all printers with beepers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.bold">
+<code class="descname">bold</code><span class="sig-paren">(</span><em>bold=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.bold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes text emphasized or unemphasized (bold=False)</p>
+<blockquote>
+<div>printer.bold()
+printer.text(&#8216;This text is bold text&#8217;)
+printer.lf()
+printer.bold(False)
+printer.text(&#8216;This text is not bold&#8217;)
+printer.lf()</div></blockquote>
+<dl class="docutils">
+<dt>bold</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>True for turning on bold font, False for switching to normal font weight (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.charSpacing">
+<code class="descname">charSpacing</code><span class="sig-paren">(</span><em>charSpacing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.charSpacing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.charSpacing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set right-side character spacing</p>
+<p>printer.charSpacing(1)
+printer.text(&#8216;This text has normal right char spacing&#8217;)
+printer.lf()
+printer.charSpacing(5)
+printer.text(&#8216;This text has 5 right char spacing&#8217;)
+printer.lf()</p>
+<dl class="docutils">
+<dt>charSpacing</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd>Char spacing, range from 1 to 256 (default: 0)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.color">
+<code class="descname">color</code><span class="sig-paren">(</span><em>color=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Most thermal printers support just one color, black. Some ESCPOS printers(especially dot matrix) also support a
+second color(usually red). A few rarer models also support upto 7 different colors. Do note that in many printer
+models, this command only works when the color is set at the beginning of a new line before any text is printed.</p>
+<blockquote>
+<div>printer.color()
+printer.text(&#8216;This text is in primary color&#8217;)
+printer.lf()
+printer.color(1)
+printer.text(&#8216;This text is not in color 2&#8217;)
+printer.lf()
+printer.color(3)
+printer.text(&#8216;This text is not in color 3&#8217;)
+printer.lf()</div></blockquote>
+<dl class="docutils">
+<dt>color</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>0 for switching to primary color, a positive integer for switching to a secondary color (default: 0)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.cr">
+<code class="descname">cr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.cr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.cr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print and carriage return. When automatic line feed is enabled this method works the same as lf , else it is
+ignored.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.cutPaper">
+<code class="descname">cutPaper</code><span class="sig-paren">(</span><em>cut='partial'</em>, <em>feed=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.cutPaper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.cutPaper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cuts the paper in escpos printers that support this function</p>
+<blockquote>
+<div>printer.cutPaper()</div></blockquote>
+<dl class="docutils">
+<dt>cut</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>&#8216;partial&#8217; or &#8216;full&#8217; cut (default: &#8216;partial&#8217;)</dd>
+<dt>feed</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>True for feeding paper to cutting position before executing cut, false for cutting paper at current
+position (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.disable">
+<code class="descname">disable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.disable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable the printer. After a disable command the printer ignores all commands except enable() or other real-time
+commands.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.doubleHeight">
+<code class="descname">doubleHeight</code><span class="sig-paren">(</span><em>doubleHeight=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.doubleHeight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.doubleHeight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes text double height, its recommended to use textSize() for supported printers</p>
+<blockquote>
+<div>printer.doubleHeight()
+printer.text(&#8216;This text is double height text&#8217;)
+printer.lf()
+printer.doubleHeight(False)
+printer.text(&#8216;This text is not double height&#8217;)
+printer.lf()</div></blockquote>
+<dl class="docutils">
+<dt>doubleHeight</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>True for turning on double height text, False for switching to normal height text (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.doubleStrike">
+<code class="descname">doubleStrike</code><span class="sig-paren">(</span><em>doubleStrike=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.doubleStrike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.doubleStrike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Puts a double strike on the text</p>
+<blockquote>
+<div>printer.doubleStrike()
+printer.text(&#8216;This text is double strike text&#8217;)
+printer.lf()
+printer.doubleStrike(False)
+printer.text(&#8216;This text is not double strike&#8217;)
+printer.lf()</div></blockquote>
+<dl class="docutils">
+<dt>doubleStrike</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>True for turning on font double strike, False for switching off font double strike (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.doubleWidth">
+<code class="descname">doubleWidth</code><span class="sig-paren">(</span><em>doubleWidth=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.doubleWidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.doubleWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes text double width, its recommended to use textSize() for supported printers</p>
+<blockquote>
+<div>printer.doubleWidth()
+printer.text(&#8216;This text is double width text&#8217;)
+printer.lf()
+printer.doubleWidth(False)
+printer.text(&#8216;This text is not double width&#8217;)
+printer.lf()</div></blockquote>
+<dl class="docutils">
+<dt>doubleWidth</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>True for turning on double width text, False for switching to normal width text (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.drawerKickPulse">
+<code class="descname">drawerKickPulse</code><span class="sig-paren">(</span><em>pin=0</em>, <em>time=8</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.drawerKickPulse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.drawerKickPulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate pulse in real-time on one of the connectors, this is often connected to the cash drawer attached to
+cashier terminals.</p>
+<blockquote>
+<div>printer.drawerKickPulse()</div></blockquote>
+<dl class="docutils">
+<dt>pin</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd>Pin to which the pulse must be sent this must be either 0 or 1 for pins 2 or 5 respectively (default: 0)</dd>
+<dt>time</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd>Duration of the pulse in units of 100 ms (range: 1 - 8) (default: 8)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.enable">
+<code class="descname">enable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.enable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the printer after a disable command</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.ff">
+<code class="descname">ff</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.ff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.ff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Form feed. When in page mode, print data in the buffer and return back to standard mode</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.font">
+<code class="descname">font</code><span class="sig-paren">(</span><em>font='a'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.font"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.font" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set printer font. Most printers support two fonts i.e. &#8216;a&#8217; or &#8216;b&#8217;, some may support a third font &#8216;c&#8217;</p>
+<blockquote>
+<div>printer.font(&#8216;b&#8217;)
+printer.text(&#8216;This text is in font b&#8217;)
+printer.lf()
+printer.font(&#8216;a&#8217;)
+printer.text(&#8216;This text is in font a&#8217;)
+printer.lf()</div></blockquote>
+<dl class="docutils">
+<dt>font</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>Font for the printer, default &#8216;a&#8217;. The font may be either &#8216;a&#8217;, &#8216;b&#8217; or &#8216;c&#8217; (default:&#8217;a&#8217;)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.horizontalPosition">
+<code class="descname">horizontalPosition</code><span class="sig-paren">(</span><em>horizontalPosition=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.horizontalPosition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.horizontalPosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the horizontal print position relative to the left margin in 1/60th of inches. The printer ignores this
+command if the specified position is to the right of the right margin.</p>
+<blockquote>
+<div>printer.lf()
+printer.horizontalPosition(100)
+printer.text(&#8216;This text starts at 1/6inches from left margin&#8217;)</div></blockquote>
+<dl class="docutils">
+<dt>horizontalPosition</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd>horizontal position from left margin in 1/60th of inches (default: 0)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.image">
+<code class="descname">image</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a image from a file</p>
+<dl class="docutils">
+<dt>path</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>Path to the image file to be printed</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the Printer. Clears the data in print buffer and resets the printer to the mode that was in effect
+when the power was turned on. This function is automatically called on creation of printer object.</p>
+<ul class="simple">
+<li>Any macro definitions are not cleared.</li>
+<li>Offline response selection is not cleared.</li>
+<li>Contents of user NV memory are not cleared.</li>
+<li>NV graphics (NV bit image) and NV user memory are not cleared.</li>
+<li>The maintenance counter value is not affected by this command.</li>
+<li>The specifying of offline response isn&#8217;t cleared.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.invert">
+<code class="descname">invert</code><span class="sig-paren">(</span><em>invert=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.invert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.invert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invert text colors printing, switches from black on white background to white on black background</p>
+<blockquote>
+<div>printer.invert()
+printer.text(&#8216;This text is in inverted colors&#8217;)
+printer.lf()
+printer.invert(False)
+printer.text(&#8216;This text is not in inverted colors&#8217;)
+printer.lf()</div></blockquote>
+<dl class="docutils">
+<dt>invert</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>True for turning on inverted colors, False for switching off inverted colors (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.leftMargin">
+<code class="descname">leftMargin</code><span class="sig-paren">(</span><em>leftMargin=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.leftMargin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.leftMargin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the left margin for printing. Set the left margin at the beginning of a line. The printer ignores any data
+preceding this command on the same line in the buffer.</p>
+<p>In page mode sets the left margin to leftMargin x (horizontal motion unit) from the left edge of the printable
+area</p>
+<blockquote>
+<div>printer.lf()
+printer.leftMargin(30)
+printer.text(&#8216;This text has left Margin of 30&#8217;)</div></blockquote>
+<dl class="docutils">
+<dt>leftMargin</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd>left Margin, range from 0 to 65535. If the margin exceeds the printable area, the left margin is
+automatically set to the maximum value of the printable area.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.lf">
+<code class="descname">lf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.lf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.lf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Line feed. Moves to the next line. You can substitute this method with printer.text(&#8216;n&#8217;)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.lineSpacing">
+<code class="descname">lineSpacing</code><span class="sig-paren">(</span><em>lineSpacing=30</em>, <em>commandSet='3'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.lineSpacing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.lineSpacing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set line character spacing</p>
+<p>printer.lineSpacing()
+printer.text(&#8216;This text has 1/6 inch line spacing&#8217;)
+printer.lf()
+printer.lineSpacing(5)
+printer.text(&#8216;This text has 5/60 inch line spacing&#8217;)
+printer.lf()</p>
+<dl class="docutils">
+<dt>lineSpacing</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd>Line spacing, range from 0 to 255, sets line spacing to lineSpacing/360 of an inch (default: 30)</dd>
+<dt>commandSet</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>ESCPOS provides three aternate commands for setting line spacing in addition to the recommended &#8216;+&#8217;, &#8216;3&#8217;,
+&#8216;A&#8217; (default : &#8216;3&#8217;)
+* when commandSet is &#8216;+&#8217; lineSpacing is set to lineSpacing/360 inch, 0 &lt;= lineSpacing &lt;= 255
+* when commandSet is &#8216;3&#8217; lineSpacing is set to lineSpacing/180 inch, 0 &lt;= lineSpacing &lt;= 255
+* when commandSet is &#8216;A&#8217; lineSpacing is set to lineSpacing/60 inch, 0 &lt;= lineSpacing &lt;= 85</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.printAreaWidth">
+<code class="descname">printAreaWidth</code><span class="sig-paren">(</span><em>width=65535</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.printAreaWidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.printAreaWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Print area width for the thermal printer, In Standard mode, sets the print area width to</p>
+<blockquote>
+<div>width x basic calculated pitch</div></blockquote>
+<p>This command is effective only when processed at the top of the line when standard mode is being used.
+Printable area width setting is effective until init is executed, the printer is reset, or the power is turned
+off.</p>
+<dl class="docutils">
+<dt>width</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd>16 bits value, range between 0 to 65535 specifying print area width in basic calculated pitch</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.qr">
+<code class="descname">qr</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.qr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.qr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print QR Code for the provided string</p>
+<p>&#64;param text : Text to be printed to the QR code</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.rotate90">
+<code class="descname">rotate90</code><span class="sig-paren">(</span><em>rotate=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.rotate90"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.rotate90" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates printing by 90 degrees</p>
+<blockquote>
+<div>printer.lf()
+printer.rotate90(100)
+printer.text(&#8216;This text is rotated 90 degrees&#8217;)</div></blockquote>
+<dl class="docutils">
+<dt>rotate</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>rotate by 90 degrees if True, else set to normal style (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.tab">
+<code class="descname">tab</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.tab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the cursor to next horizontal tab position like a &#8216;t&#8217;. This command is ignored unless the next
+horizontal tab position has been set. You may substitute this command with a printer.text(&#8216;t&#8217;) as well. See
+tabPositions() to understand the best way to use tabs to print out beautiul receipts.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.tabPositions">
+<code class="descname">tabPositions</code><span class="sig-paren">(</span><em>positions=[8, 16, 24, 32, 40]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.tabPositions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.tabPositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set tab positions for printer. Each tab() will move the cursor to the next tab position. This is useful when
+printing receipts and bills as this allows you to set one tab position for the prices. so after printing the plu
+name, add a tab to immediately move to the tab position to print the price. e.g.</p>
+<blockquote>
+<div><p>printer.tabPositions([5, 32])
+for plu in plus:</p>
+<blockquote>
+<div>printer.text(plu.quantity)
+printer.text(&#8216; x &#8216; + plu.name)
+printer.tab()
+printer.text(&#8216;$&#8217; + plu.price)</div></blockquote>
+</div></blockquote>
+<p>This would print a well aligned receipt like so:</p>
+<blockquote>
+<div>2  x Guiness Beer              $24.00
+23 x Pizza                     $500.50
+1  x Tandoori Chicken          $50.20</div></blockquote>
+<dl class="docutils">
+<dt>positions</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">list</span><dd>A list of numbers specifying tab positions e.g. [8,16,24,32,40]</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.textSize">
+<code class="descname">textSize</code><span class="sig-paren">(</span><em>height=1</em>, <em>width=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.textSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.textSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets font text Size. Note that many printers will not support the full range of text heights and widths, e.g.
+many models may only support a maximum height and width of 8</p>
+<p>printer.textSize(2,3)
+printer.text(&#8216;This text is double height and thrice the width&#8217;)
+printer.lf()
+printer.textSize(1,4)
+printer.text(&#8216;This text is normal height and quadruple width&#8217;)
+printer.lf()</p>
+<dl class="docutils">
+<dt>height</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd>Text height, range from 1 to 16 (default: 0)</dd>
+<dt>width</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd>Text width, range from 1 to 16 (default: 0)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.underline">
+<code class="descname">underline</code><span class="sig-paren">(</span><em>underline=True</em>, <em>doubleDot=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.underline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.underline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Puts a underline under the text</p>
+<blockquote>
+<div>printer.underline()
+printer.text(&#8216;This text is underlined text&#8217;)
+printer.lf()
+printer.underline(True,True)
+printer.text(&#8216;This text is double dot width underlined text&#8217;)
+printer.lf()
+printer.underline(False)
+printer.text(&#8216;This text is not underlined&#8217;)
+printer.lf()</div></blockquote>
+<dl class="docutils">
+<dt>underline</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>True for turning on font underline, False for switching off font underline (default: True)</dd>
+<dt>doubleDot</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>True for double dot width underline, False for single dot width underline (default : False)
+This option doesn&#8217;t have any effect when usePrintMode is set to True for the printer</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="escpos.commandset.generic.Generic.upsideDown">
+<code class="descname">upsideDown</code><span class="sig-paren">(</span><em>upsideDown=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/commandset/generic.html#Generic.upsideDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.commandset.generic.Generic.upsideDown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upside down text printing</p>
+<blockquote>
+<div>printer.upsideDown()
+printer.text(&#8216;This text is upside down&#8217;)
+printer.lf()
+printer.upsideDown(False)
+printer.text(&#8216;This text is not upside down&#8217;)
+printer.lf()</div></blockquote>
+<dl class="docutils">
+<dt>upsideDown</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>True for turning on upside down printing, False for switching off upside down printing
+(default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="escpos.commandset.generic.Generic.usePrintMode">
+<code class="descname">usePrintMode</code><em class="property"> = False</em><a class="headerlink" href="#escpos.commandset.generic.Generic.usePrintMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setting this to true makes the package keep track of font style, bold, height, width and underline
+statuses internally and use printmode to set these values everytime any one of them is updated. Set
+this to False if you prefer to set only individual text styles when you run font(), bold(), height(),
+width() or underline() commands</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-escpos.commandset">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-escpos.commandset" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">escpos.commandset package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-escpos.commandset.generic">escpos.commandset.generic module</a></li>
+<li><a class="reference internal" href="#module-escpos.commandset">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/escpos.commandset.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Shantanu Bhadoria.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+    </div>
+  </body>
+</html>

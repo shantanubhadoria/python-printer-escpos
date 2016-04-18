@@ -45,5 +45,6 @@ def set_properties(project):
     project.set_property("sphinx_doc_builder", "html")
     project.set_property("sphinx_project_name", project.name)
     project.set_property("sphinx_project_version", project.version)
+    project.set_property("sphinx_source_dir", "docs")
     #project.set_property('pybuilder_header_plugin_expected_header', '#asda')
     #project.set_property('pybuilder_header_plugin_expected_header', open('header.py').read())

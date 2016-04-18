@@ -1,20 +1,3 @@
-"""
-@author: Shantanu Bhadoria <shantanu@cpan.org>
-@copyright: Copyright (c) Shantanu Bhadoria
-@license: GPL
-
-Synopsis
---------
-
-    from escpos.USB import getUSBPrinter
-
-    printer = printer = getUSBPrinter()(idVendor=0x1504, idProduct=0x0006)
-
-    printer.text("Hello World\n")
-
-To see the full range of commands available for Generic commandset see escpos.commandset.generic
-"""
-
 import usb.core
 import usb.util
 import importlib
@@ -22,39 +5,41 @@ import importlib
 
 def getUSBPrinter(commandSet='Generic'):
     """
-    Return USB Printer Object while loading the specified command set.
 
-    Synopsis
-    --------
-    printer = getUSBPrinter(commandSet='Generic')(idVendor=0x1504, idProduct=0x0006)
-
-    Parameters
-    ----------
-    commandSet : str
-                 Command set to load(default: 'Generic')
-    Returns
-    -------
-    USBPrinter Class
-        Returns USB Printer Class inheriting commands from the specified commandset
+    :param str commandSet: Command set to load from **escpos.commandset.*** namespace (default: 'Generic')
 
 
-    USBPrinter Class Parameters
-    ---------------------------
-    idVendor       : 2 byte int(Can be provided in hex representation like 0x1504)
-                     Vendor Id for the USB Device. Use lsusb on unix like OSes to get the hex value for this
-    idProduct      : 2 byte int(Can be provided in hex representation like 0x1504)
-                     Product Id for the USB Device. Use lsusb on unix like OSes to get the hex value for this
-    interface      : number(hex), optional
-                     USB device interface (default: 0)
-                        lsusb -vvv -d <vendorId in hex>:<productId in hex> | grep iInterface
-    inputEndPoint  : 1 byte int(Can be provided in hex representation like 0x82), optional
-                     USB Input end point (default: 0x82)
-                        lsusb -vvv -d <vendorId in hex>:<productId in hex> | grep bEndpointAddress | grep IN
-    outputEndPoint : 1 byte int(Can be provided in hex representation like 0x01), optional
-                     USB Output end point (default: 0x01)
-                        lsusb -vvv -d <vendorId in hex>:<productId in hex> | grep bEndpointAddress | grep OUT
-    initialize     : bool, optional
-                     Initialize printer(call initialize()), default True
+    :returns: USBPrinter Class
+
+    .. py:class:: USBPrinter
+
+        :param int idVendor: 2 byte int(Can be provided in hex representation like 0x1504). Vendor Id for the USB \
+        Device.
+        :param int idProduct: 2 byte int(Can be provided in hex representation like 0x0006). Product Id for the USB \
+        Device.
+        :param int interface: number(hex), USB Input end point \
+            Retrieve this value with the following command on UNIX like OSes (default: 0)
+
+            ``lsusb -vvv -d <vendorId in hex>:<productId in hex> | grep iInterface``
+        :param int inputEndPoint: 1 byte int(Can be provided in hex representation like 0x82), USB Input \
+        end point. Retrieve this value with the following command on UNIX like OSes (default: 0x82)
+
+            ``lsusb -vvv -d <vendorId in hex>:<productId in hex> | grep bEndpointAddress | grep IN``
+        :param int outputEndPoint: 1 byte int(Can be provided in hex representation like 0x01), USB Output \
+        end point. Retrieve this value with the following command on UNIX like OSes (default: 0x01)
+
+            ``lsusb -vvv -d <vendorId in hex>:<productId in hex> | grep bEndpointAddress | grep OUT``
+        :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)
+        :returns: USBPrinter object
+
+
+    Return USB Printer Class with the specified command set in the **escpos.commandset.*** namespace.
+
+    **Usage**
+    ::
+
+        printer = getUSBPrinter(commandSet='Generic')(idVendor=0x1504, idProduct=0x0006)
+
     """
     commandSetModule = importlib.import_module('..commandset.' + commandSet.lower(), __name__)
     commandSetClass = getattr(commandSetModule, commandSet)

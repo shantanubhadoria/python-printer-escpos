@@ -205,6 +205,16 @@ class genericTest(unittest.TestCase):
     def test_qr(cls):
         cls.printer.qr('My name is Shantanu Bhadoria')
 
+    def test_textSize(cls):
+        cls.printer.lf()
+        cls.printer.textSize(width=4, height=4)
+        cls.printer.text('4x4 size')
+        cls.printer.lf()
+        cls.printer.textSize(width=2, height=2)
+        cls.printer.text('2x2 size')
+        cls.printer.lf()
+        cls.printer.textSize()
+
     def tearDown(self):
         pass  # time.sleep(1)
 
