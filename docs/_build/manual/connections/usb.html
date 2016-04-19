@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>USB Printers &mdash; printer-escpos 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="printer-escpos 0.0.1a documentation" href="../../index.html" />
+    <link rel="up" title="Connecting to your printer" href="../connections.html" />
+    <link rel="next" title="Serial Printers" href="serial.html" />
+    <link rel="prev" title="Connecting to your printer" href="../connections.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="serial.html" title="Serial Printers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../connections.html" title="Connecting to your printer"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../manual.html" >Manual</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../connections.html" accesskey="U">Connecting to your printer</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="usb-printers">
+<h1>USB Printers<a class="headerlink" href="#usb-printers" title="Permalink to this headline">¶</a></h1>
+<a class="reference internal image-reference" href="../../_images/usb.jpeg"><img alt="../../_images/usb.jpeg" src="../../_images/usb.jpeg" style="width: 400px;" /></a>
+<p>Getting the printer object:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.connections</span> <span class="k">import</span> <span class="n">getUSBPrinter</span>
+
+
+<span class="n">printer</span> <span class="o">=</span> <span class="n">getUSBPrinter</span><span class="p">()(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x1504</span><span class="p">,</span>  <span class="c1"># USB vendor and product Ids for Bixolon SRP-350plus</span>
+                          <span class="n">idProduct</span><span class="o">=</span><span class="mh">0x0006</span>  <span class="c1"># printer</span>
+                          <span class="n">inputEndPoint</span><span class="o">=</span><span class="mh">0x82</span><span class="p">,</span>
+                          <span class="n">outputEndPoint</span><span class="o">=</span><span class="mh">0x01</span><span class="p">)</span>
+
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>As you might have noticed there are a few parameters used above for connecting to your USB escpos printer that you might
+not be aware of. USB Printers require USB vendorID, productID, interface number, input endpoint id, output endpoint id
+to create a connection. Read on to see how to get these values for your printer and create a printer object for a USB
+printer</p>
+<div class="section" id="getting-vendor-id-and-product-id">
+<h2>Getting vendor id and product id<a class="headerlink" href="#getting-vendor-id-and-product-id" title="Permalink to this headline">¶</a></h2>
+<p>On Unix like OSes, make sure your printer is switched off and run lsusb command to see a list of devices with their
+product id and vendor id:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ lsusb
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 003 Device 008: ID 0cf3:0036 Atheros Communications, Inc.
+</pre></div>
+</div>
+<p>Now switch on your printer and run lsusb again:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ lsusb
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 003 Device 003: ID 1504:0006
+Bus 003 Device 008: ID 0cf3:0036 Atheros Communications, Inc.
+</pre></div>
+</div>
+<p>The second device in this list is the thermal printer. I know this because if I switch off the printer and run lsusb
+again that line will disappear. The vendor id and product id are in base16 format. That means the vendor id for my
+printer is 0x1504 and product id is 0x0006</p>
+</div>
+<div class="section" id="getting-interface-id">
+<h2>Getting interface id<a class="headerlink" href="#getting-interface-id" title="Permalink to this headline">¶</a></h2>
+<p>Following this you can get the interface number for your printer with the following command (Note
+that I used the vendorid 1504 and productid 0006 for my printer that I discovered in the previous section):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ lsusb -vvv -d 1504:0006 | grep iInterface
+      iInterface              0
+</pre></div>
+</div>
+<p>So the  interface number for my printer is 0, since the module uses a default interface number 0, I do not need to
+specify this value in my constructor</p>
+</div>
+<div class="section" id="getting-input-endpoint">
+<h2>Getting input endpoint<a class="headerlink" href="#getting-input-endpoint" title="Permalink to this headline">¶</a></h2>
+<p>Again you can use the lsusb to get the input endpoint as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep IN
+bEndpointAddress     0x81  EP 1 IN
+</pre></div>
+</div>
+<p>That gives me the input endpoint number 0x81, this is also the default for the module.</p>
+</div>
+<div class="section" id="getting-output-endpoint">
+<h2>Getting output endpoint<a class="headerlink" href="#getting-output-endpoint" title="Permalink to this headline">¶</a></h2>
+<p>You can now use the lsusb to get the output endpoint as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep OUT
+bEndpointAddress     0x01  EP 1 OUT
+</pre></div>
+</div>
+<p>That gives me the output endpoint number 0x01, this is also the default for the module.</p>
+</div>
+<div class="section" id="creating-the-printer-object">
+<h2>Creating the printer object<a class="headerlink" href="#creating-the-printer-object" title="Permalink to this headline">¶</a></h2>
+<p>Using the above values we can now create a printer object and start talking to our printer:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.connections</span> <span class="k">import</span> <span class="n">getUSBPrinter</span>
+
+
+<span class="n">printer</span> <span class="o">=</span> <span class="n">getUSBPrinter</span><span class="p">()(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x1504</span><span class="p">,</span>  <span class="c1"># USB vendor and product Ids for Bixolon SRP-350plus</span>
+                          <span class="n">idProduct</span><span class="o">=</span><span class="mh">0x0006</span>  <span class="c1"># printer</span>
+                          <span class="n">inputEndPoint</span><span class="o">=</span><span class="mh">0x82</span><span class="p">,</span>
+                          <span class="n">outputEndPoint</span><span class="o">=</span><span class="mh">0x01</span><span class="p">)</span>
+
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">USB Printers</a><ul>
+<li><a class="reference internal" href="#getting-vendor-id-and-product-id">Getting vendor id and product id</a></li>
+<li><a class="reference internal" href="#getting-interface-id">Getting interface id</a></li>
+<li><a class="reference internal" href="#getting-input-endpoint">Getting input endpoint</a></li>
+<li><a class="reference internal" href="#getting-output-endpoint">Getting output endpoint</a></li>
+<li><a class="reference internal" href="#creating-the-printer-object">Creating the printer object</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../connections.html"
+                        title="previous chapter">Connecting to your printer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="serial.html"
+                        title="next chapter">Serial Printers</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/manual/connections/usb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="serial.html" title="Serial Printers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../connections.html" title="Connecting to your printer"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../manual.html" >Manual</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../connections.html" >Connecting to your printer</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Shantanu Bhadoria.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+    </div>
+  </body>
+</html>

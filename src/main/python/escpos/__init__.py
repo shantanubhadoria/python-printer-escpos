@@ -67,7 +67,7 @@ Get Printer Object
 Now that we have the connection parameters for our printer we can create the printer object as follows. We will use the
 Generic commandset to print output to the printer::
 
-    from escpos.USB import getUSBPrinter
+    from escpos.connections import getUSBPrinter
 
 
     printer = getUSBPrinter()(idVendor=0x1504, idProduct=0x0006)  # USB vendor and product Ids for Bixolon SRP-350plus

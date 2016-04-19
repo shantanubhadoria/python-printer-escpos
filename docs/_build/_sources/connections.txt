@@ -1,0 +1,5 @@
+Connecting to your printer
+##########################
+
+This module allows you to connect to your receipt printers over USB, network, serial or device file connections.
+connections

@@ -11,10 +11,10 @@ Subpackages
 Submodules
 ----------
 
-escpos.USB module
+escpos.connections module
 -----------------
 
-.. automodule:: escpos.USB
+.. automodule:: escpos.connections
     :members:
     :undoc-members:
     :show-inheritance:

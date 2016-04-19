@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>escpos package &mdash; python-escpos 0.0.1a documentation</title>
+    <title>escpos package &mdash; printer-escpos 0.0.1a documentation</title>
     
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="python-escpos 0.0.1a documentation" href="../index.html" /> 
+    <link rel="top" title="printer-escpos 0.0.1a documentation" href="../index.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -62,11 +62,140 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-escpos.USB">
-<span id="escpos-usb-module"></span><h2>escpos.USB module<a class="headerlink" href="#module-escpos.USB" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="escpos-connections-module">
+<h2>escpos.connections module<a class="headerlink" href="#escpos-connections-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-escpos.connections"></span><dl class="function">
+<dt id="escpos.connections.getFilePrinter">
+<code class="descclassname">escpos.connections.</code><code class="descname">getFilePrinter</code><span class="sig-paren">(</span><em>commandSet='Generic'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/connections.html#getFilePrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.connections.getFilePrinter" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method does not allow two way communication with the printer and status retiieval and read commands will not
+be available when using this connection format, so only use FilePrinter class if you are unable to use other printer
+conection classes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>commandSet</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Command set to load from <strong>escpos.commandset.*</strong> namespace (default: &#8216;Generic&#8217;)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">FilePrinter Class</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="escpos.connections.FilePrinter">
+<em class="property">class </em><code class="descclassname">escpos.connections.</code><code class="descname">FilePrinter</code><a class="headerlink" href="#escpos.connections.FilePrinter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dev</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; A string representing the device. For Unix like systems this would be a serial or USB devicefile</td>
+</tr>
+</tbody>
+</table>
+<p>pointing to the printer like <cite>/dev/ttyS0</cite>. (default: /dev/ttyS0)
+:param bool initialize: Call initialize() function to reset the printer to default status.(default: True)
+:returns: FilePrinter object</p>
+</dd></dl>
+
+<p>Return FilePrinter Class with the specified command set in the <strong>escpos.commandset.*</strong> namespace.</p>
+<p><strong>Usage</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printer</span> <span class="o">=</span> <span class="n">getFilePrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">)(</span><span class="n">dev</span><span class="o">=</span><span class="s1">&#39;/dev/ttys2&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="function">
-<dt id="escpos.USB.getUSBPrinter">
-<code class="descclassname">escpos.USB.</code><code class="descname">getUSBPrinter</code><span class="sig-paren">(</span><em>commandSet='Generic'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/USB.html#getUSBPrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.USB.getUSBPrinter" title="Permalink to this definition">¶</a></dt>
+<dt id="escpos.connections.getNetworkPrinter">
+<code class="descclassname">escpos.connections.</code><code class="descname">getNetworkPrinter</code><span class="sig-paren">(</span><em>commandSet='Generic'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/connections.html#getNetworkPrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.connections.getNetworkPrinter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>commandSet</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Command set to load from <strong>escpos.commandset.*</strong> namespace (default: &#8216;Generic&#8217;)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">NetworkPrinter Class</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="escpos.connections.NetworkPrinter">
+<em class="property">class </em><code class="descclassname">escpos.connections.</code><code class="descname">NetworkPrinter</code><a class="headerlink" href="#escpos.connections.NetworkPrinter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>host</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; IP address or FQDN for the network escpos printer.</li>
+<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Network port number for your network escpos printer.(default: 9100)</li>
+<li><strong>initialize</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Call initialize() function to reset the printer to default status.(default: True)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">NetworkPrinter object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Return NetworkPrinter Class with the specified command set in the <strong>escpos.commandset.*</strong> namespace.</p>
+<p><strong>Usage</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printer</span> <span class="o">=</span> <span class="n">getNetworkPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">)(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.168.20&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">9200</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="escpos.connections.getSerialPrinter">
+<code class="descclassname">escpos.connections.</code><code class="descname">getSerialPrinter</code><span class="sig-paren">(</span><em>commandSet='Generic'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/connections.html#getSerialPrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.connections.getSerialPrinter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>commandSet</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Command set to load from <strong>escpos.commandset.*</strong> namespace (default: &#8216;Generic&#8217;)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">SerialPrinter Class</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="escpos.connections.SerialPrinter">
+<em class="property">class </em><code class="descclassname">escpos.connections.</code><code class="descname">SerialPrinter</code><a class="headerlink" href="#escpos.connections.SerialPrinter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dev</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; A string representing the device. For Unix like systems this would be a devicefile pointing         to the printer like <cite>/dev/ttyS0</cite>. For windows systems this would be a windows serial port address like <cite>COM1</cite>,         <cite>COM2</cite>, <cite>COM3</cite>. (default: /dev/ttyS0)</li>
+<li><strong>baudrate</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Baudrate for your printer&#8217;s serial port.(default: 9600)</li>
+<li><strong>bytesize</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; bytesize for each chunk of data sent over the serial port.</li>
+<li><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Timeout for the serial port.</li>
+<li><strong>initialize</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Call initialize() function to reset the printer to default status.(default: True)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">SerialPrinter object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Return SerialPrinter Class with the specified command set in the <strong>escpos.commandset.*</strong> namespace.</p>
+<p><strong>Usage</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printer</span> <span class="o">=</span> <span class="n">getSerialPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">)(</span><span class="n">dev</span><span class="o">=</span><span class="s1">&#39;/dev/ttys2&#39;</span><span class="p">,</span> <span class="n">baudrate</span><span class="o">=</span><span class="mi">19200</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="escpos.connections.getUSBPrinter">
+<code class="descclassname">escpos.connections.</code><code class="descname">getUSBPrinter</code><span class="sig-paren">(</span><em>commandSet='Generic'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/escpos/connections.html#getUSBPrinter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#escpos.connections.getUSBPrinter" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -78,8 +207,8 @@
 </tbody>
 </table>
 <dl class="class">
-<dt id="escpos.USB.USBPrinter">
-<em class="property">class </em><code class="descclassname">escpos.USB.</code><code class="descname">USBPrinter</code><a class="headerlink" href="#escpos.USB.USBPrinter" title="Permalink to this definition">¶</a></dt>
+<dt id="escpos.connections.USBPrinter">
+<em class="property">class </em><code class="descclassname">escpos.connections.</code><code class="descname">USBPrinter</code><a class="headerlink" href="#escpos.connections.USBPrinter" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -107,9 +236,11 @@
 </table>
 </dd></dl>
 
-<p>Return USB Printer Class with the specified command set in the <strong>escpos.commandset.*</strong> namespace.</p>
+<p>Return USBPrinter Class with the specified command set in the <strong>escpos.commandset.*</strong> namespace.</p>
 <p><strong>Usage</strong></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printer</span> <span class="o">=</span> <span class="n">getUSBPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">)(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x1504</span><span class="p">,</span> <span class="n">idProduct</span><span class="o">=</span><span class="mh">0x0006</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -176,7 +307,7 @@ bEndpointAddress     0x01  EP 1 OUT
 <h4>Get Printer Object<a class="headerlink" href="#get-printer-object" title="Permalink to this headline">¶</a></h4>
 <p>Now that we have the connection parameters for our printer we can create the printer object as follows. We will use the
 Generic commandset to print output to the printer:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.USB</span> <span class="k">import</span> <span class="n">getUSBPrinter</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.connections</span> <span class="k">import</span> <span class="n">getUSBPrinter</span>
 
 
 <span class="n">printer</span> <span class="o">=</span> <span class="n">getUSBPrinter</span><span class="p">()(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x1504</span><span class="p">,</span> <span class="n">idProduct</span><span class="o">=</span><span class="mh">0x0006</span><span class="p">)</span>  <span class="c1"># USB vendor and product Ids for Bixolon SRP-350plus</span>
@@ -202,7 +333,7 @@ Generic commandset to print output to the printer:</p>
 <li><a class="reference internal" href="#">escpos package</a><ul>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-escpos.USB">escpos.USB module</a></li>
+<li><a class="reference internal" href="#escpos-connections-module">escpos.connections module</a></li>
 <li><a class="reference internal" href="#module-escpos">Module contents</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#escpos-printer-function-reference">ESCPOS printer function reference</a></li>
@@ -250,7 +381,7 @@ Generic commandset to print output to the printer:</p>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

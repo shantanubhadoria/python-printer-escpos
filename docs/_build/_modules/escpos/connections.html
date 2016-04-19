@@ -1,0 +1,514 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>escpos.connections &mdash; printer-escpos 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="printer-escpos 0.0.1a documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for escpos.connections</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">usb.core</span>
+<span class="kn">import</span> <span class="nn">usb.util</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span>
+
+
+<div class="viewcode-block" id="getUSBPrinter"><a class="viewcode-back" href="../../modules/escpos.html#escpos.connections.getUSBPrinter">[docs]</a><span class="k">def</span> <span class="nf">getUSBPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param str commandSet: Command set to load from **escpos.commandset.*** namespace (default: &#39;Generic&#39;)</span>
+
+
+<span class="sd">    :returns: USBPrinter Class</span>
+
+<span class="sd">    .. py:class:: USBPrinter</span>
+
+<span class="sd">        :param int idVendor: 2 byte int(Can be provided in hex representation like 0x1504). Vendor Id for the USB \</span>
+<span class="sd">        Device.</span>
+<span class="sd">        :param int idProduct: 2 byte int(Can be provided in hex representation like 0x0006). Product Id for the USB \</span>
+<span class="sd">        Device.</span>
+<span class="sd">        :param int interface: number(hex), USB Input end point \</span>
+<span class="sd">            Retrieve this value with the following command on UNIX like OSes (default: 0)</span>
+
+<span class="sd">            ``lsusb -vvv -d &lt;vendorId in hex&gt;:&lt;productId in hex&gt; | grep iInterface``</span>
+<span class="sd">        :param int inputEndPoint: 1 byte int(Can be provided in hex representation like 0x82), USB Input \</span>
+<span class="sd">        end point. Retrieve this value with the following command on UNIX like OSes (default: 0x82)</span>
+
+<span class="sd">            ``lsusb -vvv -d &lt;vendorId in hex&gt;:&lt;productId in hex&gt; | grep bEndpointAddress | grep IN``</span>
+<span class="sd">        :param int outputEndPoint: 1 byte int(Can be provided in hex representation like 0x01), USB Output \</span>
+<span class="sd">        end point. Retrieve this value with the following command on UNIX like OSes (default: 0x01)</span>
+
+<span class="sd">            ``lsusb -vvv -d &lt;vendorId in hex&gt;:&lt;productId in hex&gt; | grep bEndpointAddress | grep OUT``</span>
+<span class="sd">        :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
+<span class="sd">        :returns: USBPrinter object</span>
+
+
+<span class="sd">    Return USBPrinter Class with the specified command set in the **escpos.commandset.*** namespace.</span>
+
+<span class="sd">    **Usage**</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        printer = getUSBPrinter(commandSet=&#39;Generic&#39;)(idVendor=0x1504, idProduct=0x0006)</span>
+<span class="sd">        printer.text(&#39;Hello World&#39;)</span>
+<span class="sd">        printer.lf()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">commandSetModule</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;..commandset.&#39;</span> <span class="o">+</span> <span class="n">commandSet</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">__name__</span><span class="p">)</span>
+    <span class="n">commandSetClass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">commandSetModule</span><span class="p">,</span> <span class="n">commandSet</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">USBPrinter</span><span class="p">(</span><span class="n">commandSetClass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        USB printer class</span>
+
+<span class="sd">        Inherits dynamically from printer model commandSets based on available commandSets in escpos.commandset.*</span>
+<span class="sd">        namespace by default Generic command set is loaded</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_device</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idVendor</span><span class="p">,</span> <span class="n">idProduct</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inputEndPoint</span><span class="o">=</span><span class="mh">0x82</span><span class="p">,</span> <span class="n">outputEndPoint</span><span class="o">=</span><span class="mh">0x01</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :param int idVendor: 2 byte int(Can be provided in hex representation like 0x1504). Vendor Id for the USB \</span>
+<span class="sd">            Device.</span>
+<span class="sd">            :param int idProduct: 2 byte int(Can be provided in hex representation like 0x0006). Product Id for the USB \</span>
+<span class="sd">            Device.</span>
+<span class="sd">            :param int interface: number(hex), USB Input end point \</span>
+<span class="sd">                Retrieve this value with the following command on UNIX like OSes (default: 0)</span>
+
+<span class="sd">                ``lsusb -vvv -d &lt;vendorId in hex&gt;:&lt;productId in hex&gt; | grep iInterface``</span>
+<span class="sd">            :param int inputEndPoint: 1 byte int(Can be provided in hex representation like 0x82), USB Input \</span>
+<span class="sd">            end point. Retrieve this value with the following command on UNIX like OSes (default: 0x82)</span>
+
+<span class="sd">                ``lsusb -vvv -d &lt;vendorId in hex&gt;:&lt;productId in hex&gt; | grep bEndpointAddress | grep IN``</span>
+<span class="sd">            :param int outputEndPoint: 1 byte int(Can be provided in hex representation like 0x01), USB Output \</span>
+<span class="sd">            end point. Retrieve this value with the following command on UNIX like OSes (default: 0x01)</span>
+
+<span class="sd">                ``lsusb -vvv -d &lt;vendorId in hex&gt;:&lt;productId in hex&gt; | grep bEndpointAddress | grep OUT``</span>
+<span class="sd">            :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idVendor</span> <span class="o">=</span> <span class="n">idVendor</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idProduct</span> <span class="o">=</span> <span class="n">idProduct</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputEndPoint</span> <span class="o">=</span> <span class="n">inputEndPoint</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputEndPoint</span> <span class="o">=</span> <span class="n">outputEndPoint</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">initialize</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Essentially the same as _write(), Prints text to printer</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Search device on USB tree and set it as escpos device</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="n">usb</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">idVendor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">idVendor</span><span class="p">,</span> <span class="n">idProduct</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">idProduct</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cable isn&#39;t plugged in&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">is_kernel_driver_active</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">detach_kernel_driver</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">usb</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">USBError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not detach kernel driver: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">set_configuration</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">usb</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">USBError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not set configuration: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Print any command sent in raw format</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputEndPoint</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Read raw data from the USB device</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputEndPoint</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Release USB interface</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">:</span>
+                <span class="n">usb</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">dispose_resources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="n">USBPrinter</span></div>
+
+<div class="viewcode-block" id="getSerialPrinter"><a class="viewcode-back" href="../../modules/escpos.html#escpos.connections.getSerialPrinter">[docs]</a><span class="k">def</span> <span class="nf">getSerialPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param str commandSet: Command set to load from **escpos.commandset.*** namespace (default: &#39;Generic&#39;)</span>
+
+
+<span class="sd">    :returns: SerialPrinter Class</span>
+
+<span class="sd">    .. py:class:: SerialPrinter</span>
+
+<span class="sd">        :param str dev: A string representing the device. For Unix like systems this would be a devicefile pointing \</span>
+<span class="sd">        to the printer like `/dev/ttyS0`. For windows systems this would be a windows serial port address like `COM1`, \</span>
+<span class="sd">        `COM2`, `COM3`. (default: /dev/ttyS0)</span>
+<span class="sd">        :param int baudrate: Baudrate for your printer&#39;s serial port.(default: 9600)</span>
+<span class="sd">        :param int bytesize: bytesize for each chunk of data sent over the serial port.</span>
+<span class="sd">        :param int timeout: Timeout for the serial port.</span>
+<span class="sd">        :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
+<span class="sd">        :returns: SerialPrinter object</span>
+
+
+<span class="sd">    Return SerialPrinter Class with the specified command set in the **escpos.commandset.*** namespace.</span>
+
+<span class="sd">    **Usage**</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        printer = getSerialPrinter(commandSet=&#39;Generic&#39;)(dev=&#39;/dev/ttys2&#39;, baudrate=19200)</span>
+<span class="sd">        printer.text(&#39;Hello World&#39;)</span>
+<span class="sd">        printer.lf()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">commandSetModule</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;..commandset.&#39;</span> <span class="o">+</span> <span class="n">commandSet</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">__name__</span><span class="p">)</span>
+    <span class="n">commandSetClass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">commandSetModule</span><span class="p">,</span> <span class="n">commandSet</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">SerialPrinter</span><span class="p">(</span><span class="n">commandSetClass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Serial printer class</span>
+
+<span class="sd">        Inherits dynamically from printer model commandSets based on available commandSets in escpos.commandset.*</span>
+<span class="sd">        namespace by default Generic command set is loaded</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_device</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="s1">&#39;/dev/ttyS0&#39;</span><span class="p">,</span> <span class="n">baudrate</span><span class="o">=</span><span class="mi">9600</span><span class="p">,</span> <span class="n">bytesize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">parity</span><span class="o">=</span><span class="n">serial</span><span class="o">.</span><span class="n">PARITY_NONE</span><span class="p">,</span>
+                     <span class="n">stopbits</span><span class="o">=</span><span class="n">serial</span><span class="o">.</span><span class="n">STOPBITS_ONE</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="n">dsrdtr</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :param str dev: A string representing the device. For Unix like systems this would be a devicefile pointing \</span>
+<span class="sd">            to the printer like `/dev/ttyS0`. For windows systems this would be a windows serial port address like `COM1`, \</span>
+<span class="sd">            `COM2`, `COM3`. (default: /dev/ttyS0)</span>
+<span class="sd">            :param int baudrate: Baudrate for your printer&#39;s serial port.(default: 9600)</span>
+<span class="sd">            :param int bytesize: buts of data sent in each chunk over the serial port. Possible values 5,6,7,8 \</span>
+<span class="sd">            (default:8).</span>
+<span class="sd">            :param int parity: serial device parity. Possible values serial.PARITY_NONE, serial.PARITY_EVEN, \</span>
+<span class="sd">            serial.PARITY_ODD, serial.PARITY_MARK, serial.PARITY_SPACE (default: serial.PARITY_NONE)</span>
+<span class="sd">            :param int stopbits: number of stopbits. Possible values serial.STOPBITS_ONE, \</span>
+<span class="sd">            serial.STOPBITS_ONE_POINT_FIVE, serial.STOPBITS_TWO(default: serial.STOPBITS_ONE)</span>
+<span class="sd">            :param float timeout: Timeout for the serial port(default: 1.00).</span>
+<span class="sd">            :param bool dsrdtr: Enable hardware (DSR/DTR) flow control(default: True)</span>
+<span class="sd">            :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="n">dev</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">baudrate</span> <span class="o">=</span> <span class="n">baudrate</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bytesize</span> <span class="o">=</span> <span class="n">bytesize</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parity</span> <span class="o">=</span> <span class="n">parity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dsrdtr</span> <span class="o">=</span> <span class="n">dsrdtr</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">initialize</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Essentially the same as _write(), Prints text to printer</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Setup serial device and set it as escpos device</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">,</span>
+                                         <span class="n">baudrate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baudrate</span><span class="p">,</span>
+                                         <span class="n">bytesize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bytesize</span><span class="p">,</span>
+                                         <span class="n">parity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parity</span><span class="p">,</span>
+                                         <span class="n">stopbits</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stopbits</span><span class="p">,</span>
+                                         <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
+                                         <span class="n">dsrdtr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dsrdtr</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unable to open serial printer on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Print any command sent in raw format</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Read raw data from the serial device</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Release serial interface</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="n">SerialPrinter</span></div>
+
+<div class="viewcode-block" id="getNetworkPrinter"><a class="viewcode-back" href="../../modules/escpos.html#escpos.connections.getNetworkPrinter">[docs]</a><span class="k">def</span> <span class="nf">getNetworkPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param str commandSet: Command set to load from **escpos.commandset.*** namespace (default: &#39;Generic&#39;)</span>
+
+
+<span class="sd">    :returns: NetworkPrinter Class</span>
+
+<span class="sd">    .. py:class:: NetworkPrinter</span>
+
+<span class="sd">        :param str host: IP address or FQDN for the network escpos printer.</span>
+<span class="sd">        :param str port: Network port number for your network escpos printer.(default: 9100)</span>
+<span class="sd">        :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
+<span class="sd">        :returns: NetworkPrinter object</span>
+
+
+<span class="sd">    Return NetworkPrinter Class with the specified command set in the **escpos.commandset.*** namespace.</span>
+
+<span class="sd">    **Usage**</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        printer = getNetworkPrinter(commandSet=&#39;Generic&#39;)(host=&#39;192.168.168.20&#39;, port=9200)</span>
+<span class="sd">        printer.text(&#39;Hello World&#39;)</span>
+<span class="sd">        printer.lf()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">commandSetModule</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;..commandset.&#39;</span> <span class="o">+</span> <span class="n">commandSet</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">__name__</span><span class="p">)</span>
+    <span class="n">commandSetClass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">commandSetModule</span><span class="p">,</span> <span class="n">commandSet</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">NetworkPrinter</span><span class="p">(</span><span class="n">commandSetClass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Network printer class</span>
+
+<span class="sd">        Inherits dynamically from printer model commandSets based on available commandSets in escpos.commandset.*</span>
+<span class="sd">        namespace by default Generic command set is loaded</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_device</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">9100</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :param str host: ip address or fqdn for your printer.</span>
+<span class="sd">            :param int port: Network port number for your printer.(default: 9100)</span>
+<span class="sd">            :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">initialize</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Essentially the same as _write(), Prints text to printer</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Setup network printer and set it as escpos printer</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unable to connect to network printer on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Print any command sent in raw format</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Read raw data from the network printer</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Release network interface</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="n">NetworkPrinter</span></div>
+
+<div class="viewcode-block" id="getFilePrinter"><a class="viewcode-back" href="../../modules/escpos.html#escpos.connections.getFilePrinter">[docs]</a><span class="k">def</span> <span class="nf">getFilePrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This method does not allow two way communication with the printer and status retiieval and read commands will not</span>
+<span class="sd">    be available when using this connection format, so only use FilePrinter class if you are unable to use other printer</span>
+<span class="sd">    conection classes.</span>
+
+<span class="sd">    :param str commandSet: Command set to load from **escpos.commandset.*** namespace (default: &#39;Generic&#39;)</span>
+
+
+<span class="sd">    :returns: FilePrinter Class</span>
+
+<span class="sd">    .. py:class:: FilePrinter</span>
+
+<span class="sd">        :param str dev: A string representing the device. For Unix like systems this would be a serial or USB devicefile</span>
+<span class="sd">        pointing to the printer like `/dev/ttyS0`. (default: /dev/ttyS0)</span>
+<span class="sd">        :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
+<span class="sd">        :returns: FilePrinter object</span>
+
+<span class="sd">    Return FilePrinter Class with the specified command set in the **escpos.commandset.*** namespace.</span>
+
+<span class="sd">    **Usage**</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        printer = getFilePrinter(commandSet=&#39;Generic&#39;)(dev=&#39;/dev/ttys2&#39;)</span>
+<span class="sd">        printer.text(&#39;Hello World&#39;)</span>
+<span class="sd">        printer.lf()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">commandSetModule</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s1">&#39;..commandset.&#39;</span> <span class="o">+</span> <span class="n">commandSet</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">__name__</span><span class="p">)</span>
+    <span class="n">commandSetClass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">commandSetModule</span><span class="p">,</span> <span class="n">commandSet</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">FilePrinter</span><span class="p">(</span><span class="n">commandSetClass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        File printer class</span>
+
+<span class="sd">        Inherits dynamically from printer model commandSets based on available commandSets in escpos.commandset.*</span>
+<span class="sd">        namespace by default Generic command set is loaded</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_device</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="s1">&#39;/dev/ttyS0&#39;</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :param str dev: A string representing the device. For Unix like systems this would be a serial or USB devicefile</span>
+<span class="sd">            pointing to the printer like `/dev/ttyS0`. (default: /dev/ttyS0)</span>
+<span class="sd">            :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="n">dev</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_open</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">initialize</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Essentially the same as _write(), Prints text to printer</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Setup file handle and set it as escpos device</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unable to open  printer file at </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Print any command sent in raw format</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Release file handle</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="n">FilePrinter</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Shantanu Bhadoria.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+    </div>
+  </body>
+</html>

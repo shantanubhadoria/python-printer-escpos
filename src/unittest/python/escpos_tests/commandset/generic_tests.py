@@ -5,7 +5,7 @@ import sys
 import logging
 
 
-from escpos.USB import getUSBPrinter
+from escpos.connections import getUSBPrinter
 
 
 @unittest.skipIf(type(os.environ.get('PYTHON_ESCPOS_TEST_VENDORID')) is not str or

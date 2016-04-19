@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>escpos.commandset.generic &mdash; python-escpos 0.0.1a documentation</title>
+    <title>escpos.commandset.generic &mdash; printer-escpos 0.0.1a documentation</title>
     
     <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="python-escpos 0.0.1a documentation" href="../../../index.html" />
+    <link rel="top" title="printer-escpos 0.0.1a documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -49,10 +49,10 @@
   <h1>Source code for escpos.commandset.generic</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Generic ESCPOS command set for escpos module. You can override Generic command set by writing a module specific to your</span>
-<span class="sd">printer model in the **escpos.commandset.*** namespace as **escpos.commandset.examplecommands** and putting a class named</span>
-<span class="sd">**ExampleCommands** in that package and define the special commands in methods of **ExampleCommands** class. Then when</span>
-<span class="sd">initializing your printer pass ``commandSet=&#39;ExampleCommands&#39;`` to getXXXPrinter function. For example to use Generic</span>
-<span class="sd">commandset on a USB printer::</span>
+<span class="sd">printer model in the **escpos.commandset.*** namespace as **escpos.commandset.examplecommands** and putting a class</span>
+<span class="sd">named **ExampleCommands** in that package and define the special commands in methods of **ExampleCommands** class. Then</span>
+<span class="sd">when initializing your printer pass ``commandSet=&#39;ExampleCommands&#39;`` to getXXXPrinter function. For example to use</span>
+<span class="sd">Generic commandset on a USB printer::</span>
 
 <span class="sd">    printer = new getUSBPrinter(commandSet=&#39;Generic&#39;)(idVendor=0x1504, idProduct=0x0006)</span>
 
@@ -77,7 +77,7 @@
     <span class="c1">#: Setting this to true makes the package keep track of font style, bold, height, width and underline</span>
     <span class="c1">#: statuses internally and use printmode to set these values everytime any one of them is updated. Set</span>
     <span class="c1">#: this to False if you prefer to set only individual text styles when you run font(), bold(), height(),</span>
-    <span class="c1">#: width() or underline() commands</span>
+    <span class="c1">#: width() or underline() commands. You should ignore this attribut in most cases.</span>
     <span class="n">usePrintMode</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="n">_textFont</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span>
     <span class="n">_textBold</span> <span class="o">=</span> <span class="bp">False</span>
@@ -207,6 +207,11 @@
 <div class="viewcode-block" id="Generic.beep"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.beep">[docs]</a>    <span class="k">def</span> <span class="nf">beep</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make the printer make a beep, this is supported on almost all printers with beepers</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.beep()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x07</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
@@ -214,8 +219,9 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Makes text emphasized or unemphasized (bold=False)</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param bool bold: True for turning on bold font, False for switching to normal font weight (default: True)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.bold()</span>
 <span class="sd">            printer.text(&#39;This text is bold text&#39;)</span>
@@ -224,10 +230,6 @@
 <span class="sd">            printer.text(&#39;This text is not bold&#39;)</span>
 <span class="sd">            printer.lf()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        bold : bool</span>
-<span class="sd">               True for turning on bold font, False for switching to normal font weight (default: True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">bold</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;bold must be True or False&#39;</span><span class="p">)</span>
@@ -243,19 +245,17 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set right-side character spacing</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
-<span class="sd">        printer.charSpacing(1)</span>
-<span class="sd">        printer.text(&#39;This text has normal right char spacing&#39;)</span>
-<span class="sd">        printer.lf()</span>
-<span class="sd">        printer.charSpacing(5)</span>
-<span class="sd">        printer.text(&#39;This text has 5 right char spacing&#39;)</span>
-<span class="sd">        printer.lf()</span>
+<span class="sd">        :param int charSpacing: Char spacing, range from 1 to 256 (default: 0)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        charSpacing : int</span>
-<span class="sd">               Char spacing, range from 1 to 256 (default: 0)</span>
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.charSpacing(1)</span>
+<span class="sd">            printer.text(&#39;This text has normal right char spacing&#39;)</span>
+<span class="sd">            printer.lf()</span>
+<span class="sd">            printer.charSpacing(5)</span>
+<span class="sd">            printer.text(&#39;This text has 5 right char spacing&#39;)</span>
+<span class="sd">            printer.lf()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">charSpacing</span> <span class="o">&lt;</span> <span class="mi">257</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">charSpacing</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;charSpacing must be a int between 1 and 256&#39;</span><span class="p">)</span>
@@ -268,8 +268,10 @@
 <span class="sd">        second color(usually red). A few rarer models also support upto 7 different colors. Do note that in many printer</span>
 <span class="sd">        models, this command only works when the color is set at the beginning of a new line before any text is printed.</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param int color: 0 for switching to primary color, a positive integer for switching to a secondary color \</span>
+<span class="sd">        (default: 0)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.color()</span>
 <span class="sd">            printer.text(&#39;This text is in primary color&#39;)</span>
@@ -281,10 +283,6 @@
 <span class="sd">            printer.text(&#39;This text is not in color 3&#39;)</span>
 <span class="sd">            printer.lf()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        color : bool</span>
-<span class="sd">                    0 for switching to primary color, a positive integer for switching to a secondary color (default: 0)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">color</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;color must be a positive integer less than and 8 or 0&#39;</span><span class="p">)</span>
@@ -295,6 +293,11 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print and carriage return. When automatic line feed is enabled this method works the same as lf , else it is</span>
 <span class="sd">        ignored.</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.cr()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x0d</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
@@ -302,18 +305,14 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cuts the paper in escpos printers that support this function</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param str cut: &#39;partial&#39; or &#39;full&#39; cut (default: &#39;partial&#39;)</span>
+<span class="sd">        :param bool feed: True for feeding paper to cutting position before executing cut, false for cutting paper at \</span>
+<span class="sd">        current position (default: True)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.cutPaper()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        cut : str</span>
-<span class="sd">              &#39;partial&#39; or &#39;full&#39; cut (default: &#39;partial&#39;)</span>
-<span class="sd">        feed : bool</span>
-<span class="sd">              True for feeding paper to cutting position before executing cut, false for cutting paper at current</span>
-<span class="sd">              position (default: True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">cut</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;partial&#39;</span><span class="p">,</span> <span class="s1">&#39;full&#39;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;cut must be </span><span class="se">\&#39;</span><span class="s1">partial</span><span class="se">\&#39;</span><span class="s1"> or </span><span class="se">\&#39;</span><span class="s1">full</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -326,17 +325,25 @@
 
 <div class="viewcode-block" id="Generic.disable"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.disable">[docs]</a>    <span class="k">def</span> <span class="nf">disable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Disable the printer. After a disable command the printer ignores all commands except enable() or other real-time</span>
-<span class="sd">        commands.</span>
+<span class="sd">        Disable the printer. After a :meth:`disable` command the printer ignores all commands except :meth:`enable` or</span>
+<span class="sd">        other real-time commands.</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.disable()</span>
+<span class="sd">            printer.ensable()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ESC</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Generic.doubleHeight"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.doubleHeight">[docs]</a>    <span class="k">def</span> <span class="nf">doubleHeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doubleHeight</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Makes text double height, its recommended to use textSize() for supported printers</span>
+<span class="sd">        Makes text double height, its recommended to use :meth:`textSize` for supported printers</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param bool doubleHeight: True for turning on double height text, False for switching to normal height text \</span>
+<span class="sd">        (default: True)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.doubleHeight()</span>
 <span class="sd">            printer.text(&#39;This text is double height text&#39;)</span>
@@ -345,10 +352,6 @@
 <span class="sd">            printer.text(&#39;This text is not double height&#39;)</span>
 <span class="sd">            printer.lf()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        doubleHeight : bool</span>
-<span class="sd">               True for turning on double height text, False for switching to normal height text (default: True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">doubleHeight</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;doubleHeight must be True or False&#39;</span><span class="p">)</span>
@@ -360,8 +363,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Puts a double strike on the text</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param bool doubleStrike: True for turning on font double strike, False for switching off font double strike \</span>
+<span class="sd">        (default: True)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.doubleStrike()</span>
 <span class="sd">            printer.text(&#39;This text is double strike text&#39;)</span>
@@ -370,10 +375,6 @@
 <span class="sd">            printer.text(&#39;This text is not double strike&#39;)</span>
 <span class="sd">            printer.lf()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        doubleStrike : bool</span>
-<span class="sd">                    True for turning on font double strike, False for switching off font double strike (default: True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">doubleStrike</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;doubleStrike must be True or False&#39;</span><span class="p">)</span>
@@ -384,10 +385,12 @@
 
 <div class="viewcode-block" id="Generic.doubleWidth"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.doubleWidth">[docs]</a>    <span class="k">def</span> <span class="nf">doubleWidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doubleWidth</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Makes text double width, its recommended to use textSize() for supported printers</span>
+<span class="sd">        Makes text double width, its recommended to use :meth:`textSize` for supported printers</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param bool doubleWidth: True for turning on double width text, False for switching to normal width text \</span>
+<span class="sd">        (default: True)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.doubleWidth()</span>
 <span class="sd">            printer.text(&#39;This text is double width text&#39;)</span>
@@ -396,10 +399,6 @@
 <span class="sd">            printer.text(&#39;This text is not double width&#39;)</span>
 <span class="sd">            printer.lf()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        doubleWidth : bool</span>
-<span class="sd">               True for turning on double width text, False for switching to normal width text (default: True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">doubleWidth</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;doubleWidth must be True or False&#39;</span><span class="p">)</span>
@@ -412,38 +411,36 @@
 <span class="sd">        Generate pulse in real-time on one of the connectors, this is often connected to the cash drawer attached to</span>
 <span class="sd">        cashier terminals.</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param int pin: Pin to which the pulse must be sent this must be either 0 or 1 for pins 2 or 5 respectively \</span>
+<span class="sd">        (default: 0)</span>
+<span class="sd">        :param int time: Duration of the pulse in units of 100 ms (range: 1 - 8) (default: 8)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.drawerKickPulse()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        pin : int</span>
-<span class="sd">              Pin to which the pulse must be sent this must be either 0 or 1 for pins 2 or 5 respectively (default: 0)</span>
-<span class="sd">        time : int</span>
-<span class="sd">               Duration of the pulse in units of 100 ms (range: 1 - 8) (default: 8)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_DLE</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_DC4</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\x01</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="n">time</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Generic.enable"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.enable">[docs]</a>    <span class="k">def</span> <span class="nf">enable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Enable the printer after a disable command</span>
+<span class="sd">        Enable the printer after a :meth:`disable` command</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.disable()</span>
+<span class="sd">            printer.enable()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ESC</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="Generic.ff"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.ff">[docs]</a>    <span class="k">def</span> <span class="nf">ff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Form feed. When in page mode, print data in the buffer and return back to standard mode</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x0c</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Generic.font"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.font">[docs]</a>    <span class="k">def</span> <span class="nf">font</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set printer font. Most printers support two fonts i.e. &#39;a&#39; or &#39;b&#39;, some may support a third font &#39;c&#39;</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param str font: Font for the printer, default &#39;a&#39;. The font may be either &#39;a&#39;, &#39;b&#39; or &#39;c&#39; (default:&#39;a&#39;)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.font(&#39;b&#39;)</span>
 <span class="sd">            printer.text(&#39;This text is in font b&#39;)</span>
@@ -452,10 +449,6 @@
 <span class="sd">            printer.text(&#39;This text is in font a&#39;)</span>
 <span class="sd">            printer.lf()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        font : str</span>
-<span class="sd">               Font for the printer, default &#39;a&#39;. The font may be either &#39;a&#39;, &#39;b&#39; or &#39;c&#39; (default:&#39;a&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">font</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fontMap</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;font must be </span><span class="se">\&#39;</span><span class="s1">a</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">b</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">c</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -470,17 +463,14 @@
 <span class="sd">        Moves the horizontal print position relative to the left margin in 1/60th of inches. The printer ignores this</span>
 <span class="sd">        command if the specified position is to the right of the right margin.</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param int horizontalPosition: horizontal position from left margin in 1/60th of inches (default: 0)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.lf()</span>
 <span class="sd">            printer.horizontalPosition(100)</span>
 <span class="sd">            printer.text(&#39;This text starts at 1/6inches from left margin&#39;)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        horizontalPosition : int</span>
-<span class="sd">                             horizontal position from left margin in 1/60th of inches (default: 0)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">horizontalPosition</span> <span class="o">&lt;=</span> <span class="mi">4095</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">horizontalPosition</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;horizontalPosition must be a int between 0 and 4095 and not &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">horizontalPosition</span><span class="p">))</span>
@@ -493,10 +483,12 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print a image from a file</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        path : str</span>
-<span class="sd">               Path to the image file to be printed</span>
+<span class="sd">        :param str path: Path to the image file to be printed</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.image(&#39;/home/shantanu/companylogo.gif&#39;)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
         <span class="c1"># Convert the RGB image in printable image</span>
@@ -505,7 +497,8 @@
 <div class="viewcode-block" id="Generic.initialize"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the Printer. Clears the data in print buffer and resets the printer to the mode that was in effect</span>
-<span class="sd">        when the power was turned on. This function is automatically called on creation of printer object.</span>
+<span class="sd">        when the power was turned on. This function is automatically called on creation of printer object unless</span>
+<span class="sd">        specifically disabled.</span>
 
 <span class="sd">        * Any macro definitions are not cleared.</span>
 <span class="sd">        * Offline response selection is not cleared.</span>
@@ -513,6 +506,11 @@
 <span class="sd">        * NV graphics (NV bit image) and NV user memory are not cleared.</span>
 <span class="sd">        * The maintenance counter value is not affected by this command.</span>
 <span class="sd">        * The specifying of offline response isn&#39;t cleared.</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.initialize()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ESC</span> <span class="o">+</span> <span class="s1">&#39;@&#39;</span><span class="p">)</span></div>
 
@@ -520,8 +518,9 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Invert text colors printing, switches from black on white background to white on black background</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param bool invert: True for turning on inverted colors, False for switching off inverted colors (default: True)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.invert()</span>
 <span class="sd">            printer.text(&#39;This text is in inverted colors&#39;)</span>
@@ -530,10 +529,6 @@
 <span class="sd">            printer.text(&#39;This text is not in inverted colors&#39;)</span>
 <span class="sd">            printer.lf()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        invert : bool</span>
-<span class="sd">                    True for turning on inverted colors, False for switching off inverted colors (default: True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">invert</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invert must be True or False&#39;</span><span class="p">)</span>
@@ -550,18 +545,15 @@
 <span class="sd">        In page mode sets the left margin to leftMargin x (horizontal motion unit) from the left edge of the printable</span>
 <span class="sd">        area</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param int leftMargin: Left Margin, range: 0 to 65535. If the margin exceeds the printable area, the left \</span>
+<span class="sd">        margin is automatically set to the maximum value of the printable area.</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.lf()</span>
 <span class="sd">            printer.leftMargin(30)</span>
 <span class="sd">            printer.text(&#39;This text has left Margin of 30&#39;)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        leftMargin : int</span>
-<span class="sd">                     left Margin, range from 0 to 65535. If the margin exceeds the printable area, the left margin is</span>
-<span class="sd">                     automatically set to the maximum value of the printable area.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">leftMargin</span> <span class="o">&lt;=</span> <span class="mi">65535</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">leftMargin</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;leftMargin must be a int between 0 and 65535&#39;</span><span class="p">)</span>
@@ -573,32 +565,38 @@
 <div class="viewcode-block" id="Generic.lf"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.lf">[docs]</a>    <span class="k">def</span> <span class="nf">lf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Line feed. Moves to the next line. You can substitute this method with printer.text(&#39;\\n&#39;)</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.lf()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Generic.lineSpacing"><a class="viewcode-back" href="../../../modules/escpos.commandset.html#escpos.commandset.generic.Generic.lineSpacing">[docs]</a>    <span class="k">def</span> <span class="nf">lineSpacing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lineSpacing</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;3&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set line character spacing</span>
+<span class="sd">        Set line character spacing, note that some printers may not support all commandsets for setting a line spacing.</span>
+<span class="sd">        The most commonly available commandSet(&#39;3&#39;) is chosen by default.</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
-<span class="sd">        printer.lineSpacing()</span>
-<span class="sd">        printer.text(&#39;This text has 1/6 inch line spacing&#39;)</span>
-<span class="sd">        printer.lf()</span>
-<span class="sd">        printer.lineSpacing(5)</span>
-<span class="sd">        printer.text(&#39;This text has 5/60 inch line spacing&#39;)</span>
-<span class="sd">        printer.lf()</span>
+<span class="sd">        :param int lineSpacing: Line spacing, range from 0 to 255 when commandSet is &#39;+&#39; or &#39;3&#39;, sets line spacing to \</span>
+<span class="sd">        lineSpacing/360 of an inch if commandSet is &#39;+&#39;, lineSpacing/180 of an inch if commandSet is &#39;3&#39; and \</span>
+<span class="sd">        lineSpacing/60 of an inch if commandSet is &#39;A&#39;  (default: 30)</span>
+<span class="sd">        :param str commandSet: ESCPOS provides three aternate commands for setting line spacing i.e. &#39;+&#39;, &#39;3&#39;, &#39;A&#39; \</span>
+<span class="sd">        (default : &#39;3&#39;).</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        lineSpacing : int</span>
-<span class="sd">               Line spacing, range from 0 to 255, sets line spacing to lineSpacing/360 of an inch (default: 30)</span>
-<span class="sd">        commandSet : str</span>
-<span class="sd">               ESCPOS provides three aternate commands for setting line spacing in addition to the recommended &#39;+&#39;, &#39;3&#39;,</span>
-<span class="sd">               &#39;A&#39; (default : &#39;3&#39;)</span>
-<span class="sd">               * when commandSet is &#39;+&#39; lineSpacing is set to lineSpacing/360 inch, 0 &lt;= lineSpacing &lt;= 255</span>
-<span class="sd">               * when commandSet is &#39;3&#39; lineSpacing is set to lineSpacing/180 inch, 0 &lt;= lineSpacing &lt;= 255</span>
-<span class="sd">               * when commandSet is &#39;A&#39; lineSpacing is set to lineSpacing/60 inch, 0 &lt;= lineSpacing &lt;= 85</span>
+<span class="sd">        #. When commandSet is &#39;+&#39; lineSpacing is set to lineSpacing/360 of an inch, 0 &lt;= lineSpacing &lt;= 255</span>
+<span class="sd">        #. when commandSet is &#39;3&#39; lineSpacing is set to lineSpacing/180 of an inch, 0 &lt;= lineSpacing &lt;= 255</span>
+<span class="sd">        #. when commandSet is &#39;A&#39; lineSpacing is set to lineSpacing/60 of an inch, 0 &lt;= lineSpacing &lt;= 85</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.lineSpacing()</span>
+<span class="sd">            printer.text(&#39;This text has 1/6 inch line spacing&#39;)</span>
+<span class="sd">            printer.lf()</span>
+<span class="sd">            printer.lineSpacing(5)</span>
+<span class="sd">            printer.text(&#39;This text has 5/60 inch line spacing&#39;)</span>
+<span class="sd">            printer.lf()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">commandSet</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;commandSet must be either </span><span class="se">\&#39;</span><span class="s1">+</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">3</span><span class="se">\&#39;</span><span class="s1"> or </span><span class="se">\&#39;</span><span class="s1">A</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -614,16 +612,24 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set Print area width for the thermal printer, In Standard mode, sets the print area width to</span>
 
-<span class="sd">            width x basic calculated pitch</span>
+<span class="sd">            *width x basic calculated pitch*</span>
 
-<span class="sd">        This command is effective only when processed at the top of the line when standard mode is being used.</span>
-<span class="sd">        Printable area width setting is effective until init is executed, the printer is reset, or the power is turned</span>
-<span class="sd">        off.</span>
+<span class="sd">        :param int width: 16 bits value range, i.e. int between 0 to 65535 specifying print area width in basic \</span>
+<span class="sd">        calculated pitch</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        width : int</span>
-<span class="sd">                16 bits value, range between 0 to 65535 specifying print area width in basic calculated pitch</span>
+<span class="sd">        This command is effective only when processed at the beginning of the line when standard mode is being used.</span>
+<span class="sd">        Printable area width setting is effective until initialize is executed, the printer is reset, or the power is</span>
+<span class="sd">        turned off.</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.lf()</span>
+<span class="sd">            printer.printAreaWidth(200)</span>
+<span class="sd">            printer.text(&#39;Set print area width to 200&#39;)</span>
+<span class="sd">            printer.lf()</span>
+<span class="sd">            printer.text(&#39;1234567890123456789012345678901234567890123456789012345678901234567890&#39;)</span>
+<span class="sd">            printer.printAreaWidth()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;width must be a int&quot;</span><span class="p">)</span>
@@ -636,7 +642,13 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print QR Code for the provided string</span>
 
-<span class="sd">        @param text : Text to be printed to the QR code</span>
+<span class="sd">        :param str text: Text to be printed to the QR code</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.qr(&#39;My name is Shantanu Bhadoria&#39;)</span>
+<span class="sd">            printer.qr(&#39;WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;&#39;)  # Create a QR code for connecting to a Wifi</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">qr_code</span> <span class="o">=</span> <span class="n">qrcode</span><span class="o">.</span><span class="n">QRCode</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">box_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">qr_code</span><span class="o">.</span><span class="n">add_data</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
@@ -649,17 +661,14 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rotates printing by 90 degrees</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param bool rotate: Rotate by 90 degrees if True, else set to normal style (default: True)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.lf()</span>
 <span class="sd">            printer.rotate90(100)</span>
 <span class="sd">            printer.text(&#39;This text is rotated 90 degrees&#39;)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        rotate : bool</span>
-<span class="sd">                 rotate by 90 degrees if True, else set to normal style (default: True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ESC</span> <span class="o">+</span> <span class="s1">&#39;V&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\x01</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">rotate</span> <span class="k">else</span> <span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">))</span></div>
 
@@ -668,6 +677,11 @@
 <span class="sd">        Moves the cursor to next horizontal tab position like a &#39;\\t&#39;. This command is ignored unless the next</span>
 <span class="sd">        horizontal tab position has been set. You may substitute this command with a printer.text(&#39;\\t&#39;) as well. See</span>
 <span class="sd">        tabPositions() to understand the best way to use tabs to print out beautiul receipts.</span>
+
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.tab()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
@@ -677,26 +691,24 @@
 <span class="sd">        printing receipts and bills as this allows you to set one tab position for the prices. so after printing the plu</span>
 <span class="sd">        name, add a tab to immediately move to the tab position to print the price. e.g.</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param list positions: A list of **int(s)** specifying tab positions e.g. [8,16,24,32,40]</span>
 
-<span class="sd">            printer.tabPositions([5, 32])</span>
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.tabPositions([3, 32])</span>
 <span class="sd">            for plu in plus:</span>
 <span class="sd">                printer.text(plu.quantity)</span>
+<span class="sd">                printer.tab()</span>
 <span class="sd">                printer.text(&#39; x &#39; + plu.name)</span>
 <span class="sd">                printer.tab()</span>
 <span class="sd">                printer.text(&#39;$&#39; + plu.price)</span>
 
-<span class="sd">        This would print a well aligned receipt like so:</span>
+<span class="sd">        This would print a well aligned receipt like so::</span>
 
-<span class="sd">            2  x Guiness Beer              $24.00</span>
-<span class="sd">            23 x Pizza                     $500.50</span>
+<span class="sd">            10 x Guiness Beer              $24.00</span>
+<span class="sd">            2  x Pizza                     $500.50</span>
 <span class="sd">            1  x Tandoori Chicken          $50.20</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        positions : list</span>
-<span class="sd">                    A list of numbers specifying tab positions e.g. [8,16,24,32,40]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">chrPositions</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">for</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
@@ -708,21 +720,18 @@
 <span class="sd">        Sets font text Size. Note that many printers will not support the full range of text heights and widths, e.g.</span>
 <span class="sd">        many models may only support a maximum height and width of 8</span>
 
-<span class="sd">        Synposis</span>
-<span class="sd">        --------</span>
-<span class="sd">        printer.textSize(2,3)</span>
-<span class="sd">        printer.text(&#39;This text is double height and thrice the width&#39;)</span>
-<span class="sd">        printer.lf()</span>
-<span class="sd">        printer.textSize(1,4)</span>
-<span class="sd">        printer.text(&#39;This text is normal height and quadruple width&#39;)</span>
-<span class="sd">        printer.lf()</span>
+<span class="sd">        :param int height: Text height, range from 1 to 16 (default: 0)</span>
+<span class="sd">        :param int width: Text width, range from 1 to 16 (default: 0)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        height : int</span>
-<span class="sd">               Text height, range from 1 to 16 (default: 0)</span>
-<span class="sd">        width : int</span>
-<span class="sd">               Text width, range from 1 to 16 (default: 0)</span>
+<span class="sd">        **Example**::</span>
+
+<span class="sd">            printer.textSize(2,3)</span>
+<span class="sd">            printer.text(&#39;This text is double height and thrice the width&#39;)</span>
+<span class="sd">            printer.lf()</span>
+<span class="sd">            printer.textSize(1,4)</span>
+<span class="sd">            printer.text(&#39;This text is normal height and quadruple width&#39;)</span>
+<span class="sd">            printer.lf()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">height</span> <span class="o">&lt;</span> <span class="mi">17</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;height must be a int between 1 and 16&#39;</span><span class="p">)</span>
@@ -736,8 +745,12 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Puts a underline under the text</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param bool underline: True for turning on font underline, False for switching off font underline (default: \</span>
+<span class="sd">        True)</span>
+<span class="sd">        :param bool doubleDot: True for double dot width underline, False for single dot width underline (default : \</span>
+<span class="sd">        False).</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.underline()</span>
 <span class="sd">            printer.text(&#39;This text is underlined text&#39;)</span>
@@ -749,13 +762,6 @@
 <span class="sd">            printer.text(&#39;This text is not underlined&#39;)</span>
 <span class="sd">            printer.lf()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        underline : bool</span>
-<span class="sd">                    True for turning on font underline, False for switching off font underline (default: True)</span>
-<span class="sd">        doubleDot : bool</span>
-<span class="sd">                    True for double dot width underline, False for single dot width underline (default : False)</span>
-<span class="sd">                    This option doesn&#39;t have any effect when usePrintMode is set to True for the printer</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">underline</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;underline must be True or False&#39;</span><span class="p">)</span>
@@ -775,8 +781,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upside down text printing</span>
 
-<span class="sd">        Synopsis</span>
-<span class="sd">        --------</span>
+<span class="sd">        :param bool upsideDown: True for turning on upside down printing, False for switching off upside down printing \</span>
+<span class="sd">        (default: True)</span>
+
+<span class="sd">        **Example**::</span>
 
 <span class="sd">            printer.upsideDown()</span>
 <span class="sd">            printer.text(&#39;This text is upside down&#39;)</span>
@@ -785,11 +793,6 @@
 <span class="sd">            printer.text(&#39;This text is not upside down&#39;)</span>
 <span class="sd">            printer.lf()</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        upsideDown : bool</span>
-<span class="sd">                    True for turning on upside down printing, False for switching off upside down printing</span>
-<span class="sd">                    (default: True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">upsideDown</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;upsideDown must be True or False&#39;</span><span class="p">)</span>
@@ -914,7 +917,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">python-escpos 0.0.1a documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>

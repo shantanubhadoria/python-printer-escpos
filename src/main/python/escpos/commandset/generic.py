@@ -1,9 +1,9 @@
 """
 Generic ESCPOS command set for escpos module. You can override Generic command set by writing a module specific to your
-printer model in the **escpos.commandset.*** namespace as **escpos.commandset.examplecommands** and putting a class named
-**ExampleCommands** in that package and define the special commands in methods of **ExampleCommands** class. Then when
-initializing your printer pass ``commandSet='ExampleCommands'`` to getXXXPrinter function. For example to use Generic
-commandset on a USB printer::
+printer model in the **escpos.commandset.*** namespace as **escpos.commandset.examplecommands** and putting a class
+named **ExampleCommands** in that package and define the special commands in methods of **ExampleCommands** class. Then
+when initializing your printer pass ``commandSet='ExampleCommands'`` to getXXXPrinter function. For example to use
+Generic commandset on a USB printer::
 
     printer = new getUSBPrinter(commandSet='Generic')(idVendor=0x1504, idProduct=0x0006)
 
@@ -28,7 +28,7 @@ class Generic():
     #: Setting this to true makes the package keep track of font style, bold, height, width and underline
     #: statuses internally and use printmode to set these values everytime any one of them is updated. Set
     #: this to False if you prefer to set only individual text styles when you run font(), bold(), height(),
-    #: width() or underline() commands
+    #: width() or underline() commands. You should ignore this attribut in most cases.
     usePrintMode = False
     _textFont = 'a'
     _textBold = False
@@ -158,6 +158,11 @@ class Generic():
     def beep(self):
         """
         Make the printer make a beep, this is supported on almost all printers with beepers
+
+        **Example**::
+
+            printer.beep()
+
         """
         self._write('\x07')
 
@@ -165,8 +170,9 @@ class Generic():
         """
         Makes text emphasized or unemphasized (bold=False)
 
-        Synopsis
-        --------
+        :param bool bold: True for turning on bold font, False for switching to normal font weight (default: True)
+
+        **Example**::
 
             printer.bold()
             printer.text('This text is bold text')
@@ -175,10 +181,6 @@ class Generic():
             printer.text('This text is not bold')
             printer.lf()
 
-        Parameters
-        ----------
-        bold : bool
-               True for turning on bold font, False for switching to normal font weight (default: True)
         """
         if type(bold) is not bool:
             raise ValueError('bold must be True or False')
@@ -194,19 +196,17 @@ class Generic():
         """
         Set right-side character spacing
 
-        Synopsis
-        --------
-        printer.charSpacing(1)
-        printer.text('This text has normal right char spacing')
-        printer.lf()
-        printer.charSpacing(5)
-        printer.text('This text has 5 right char spacing')
-        printer.lf()
+        :param int charSpacing: Char spacing, range from 1 to 256 (default: 0)
 
-        Parameters
-        ----------
-        charSpacing : int
-               Char spacing, range from 1 to 256 (default: 0)
+        **Example**::
+
+            printer.charSpacing(1)
+            printer.text('This text has normal right char spacing')
+            printer.lf()
+            printer.charSpacing(5)
+            printer.text('This text has 5 right char spacing')
+            printer.lf()
+
         """
         if not(0 < charSpacing < 257) or type(charSpacing) is not int:
             raise ValueError('charSpacing must be a int between 1 and 256')
@@ -219,8 +219,10 @@ class Generic():
         second color(usually red). A few rarer models also support upto 7 different colors. Do note that in many printer
         models, this command only works when the color is set at the beginning of a new line before any text is printed.
 
-        Synopsis
-        --------
+        :param int color: 0 for switching to primary color, a positive integer for switching to a secondary color \
+        (default: 0)
+
+        **Example**::
 
             printer.color()
             printer.text('This text is in primary color')
@@ -232,10 +234,6 @@ class Generic():
             printer.text('This text is not in color 3')
             printer.lf()
 
-        Parameters
-        ----------
-        color : bool
-                    0 for switching to primary color, a positive integer for switching to a secondary color (default: 0)
         """
         if color not in [0, 1, 2, 3, 4, 5, 6, 7]:
             raise ValueError('color must be a positive integer less than and 8 or 0')
@@ -246,6 +244,11 @@ class Generic():
         """
         Print and carriage return. When automatic line feed is enabled this method works the same as lf , else it is
         ignored.
+
+        **Example**::
+
+            printer.cr()
+
         """
         self._write('\x0d')
 
@@ -253,18 +256,14 @@ class Generic():
         """
         Cuts the paper in escpos printers that support this function
 
-        Synopsis
-        --------
+        :param str cut: 'partial' or 'full' cut (default: 'partial')
+        :param bool feed: True for feeding paper to cutting position before executing cut, false for cutting paper at \
+        current position (default: True)
+
+        **Example**::
 
             printer.cutPaper()
 
-        Parameters
-        ----------
-        cut : str
-              'partial' or 'full' cut (default: 'partial')
-        feed : bool
-              True for feeding paper to cutting position before executing cut, false for cutting paper at current
-              position (default: True)
         """
         if cut not in ['partial', 'full']:
             raise ValueError('cut must be \'partial\' or \'full\'')
@@ -277,17 +276,25 @@ class Generic():
 
     def disable(self):
         """
-        Disable the printer. After a disable command the printer ignores all commands except enable() or other real-time
-        commands.
+        Disable the printer. After a :meth:`disable` command the printer ignores all commands except :meth:`enable` or
+        other real-time commands.
+
+        **Example**::
+
+            printer.disable()
+            printer.ensable()
+
         """
         self._write(self._ESC + '=' + chr(2))
 
     def doubleHeight(self, doubleHeight=True):
         """
-        Makes text double height, its recommended to use textSize() for supported printers
+        Makes text double height, its recommended to use :meth:`textSize` for supported printers
 
-        Synopsis
-        --------
+        :param bool doubleHeight: True for turning on double height text, False for switching to normal height text \
+        (default: True)
+
+        **Example**::
 
             printer.doubleHeight()
             printer.text('This text is double height text')
@@ -296,10 +303,6 @@ class Generic():
             printer.text('This text is not double height')
             printer.lf()
 
-        Parameters
-        ----------
-        doubleHeight : bool
-               True for turning on double height text, False for switching to normal height text (default: True)
         """
         if type(doubleHeight) is not bool:
             raise ValueError('doubleHeight must be True or False')
@@ -311,8 +314,10 @@ class Generic():
         """
         Puts a double strike on the text
 
-        Synopsis
-        --------
+        :param bool doubleStrike: True for turning on font double strike, False for switching off font double strike \
+        (default: True)
+
+        **Example**::
 
             printer.doubleStrike()
             printer.text('This text is double strike text')
@@ -321,10 +326,6 @@ class Generic():
             printer.text('This text is not double strike')
             printer.lf()
 
-        Parameters
-        ----------
-        doubleStrike : bool
-                    True for turning on font double strike, False for switching off font double strike (default: True)
         """
         if type(doubleStrike) is not bool:
             raise ValueError('doubleStrike must be True or False')
@@ -335,10 +336,12 @@ class Generic():
 
     def doubleWidth(self, doubleWidth=True):
         """
-        Makes text double width, its recommended to use textSize() for supported printers
+        Makes text double width, its recommended to use :meth:`textSize` for supported printers
 
-        Synopsis
-        --------
+        :param bool doubleWidth: True for turning on double width text, False for switching to normal width text \
+        (default: True)
+
+        **Example**::
 
             printer.doubleWidth()
             printer.text('This text is double width text')
@@ -347,10 +350,6 @@ class Generic():
             printer.text('This text is not double width')
             printer.lf()
 
-        Parameters
-        ----------
-        doubleWidth : bool
-               True for turning on double width text, False for switching to normal width text (default: True)
         """
         if type(doubleWidth) is not bool:
             raise ValueError('doubleWidth must be True or False')
@@ -363,38 +362,36 @@ class Generic():
         Generate pulse in real-time on one of the connectors, this is often connected to the cash drawer attached to
         cashier terminals.
 
-        Synopsis
-        --------
+        :param int pin: Pin to which the pulse must be sent this must be either 0 or 1 for pins 2 or 5 respectively \
+        (default: 0)
+        :param int time: Duration of the pulse in units of 100 ms (range: 1 - 8) (default: 8)
+
+        **Example**::
 
             printer.drawerKickPulse()
 
-        Parameters
-        ----------
-        pin : int
-              Pin to which the pulse must be sent this must be either 0 or 1 for pins 2 or 5 respectively (default: 0)
-        time : int
-               Duration of the pulse in units of 100 ms (range: 1 - 8) (default: 8)
         """
         self._write(self._DLE + self._DC4 + '\x01' + chr(pin) + chr(time))
 
     def enable(self):
         """
-        Enable the printer after a disable command
+        Enable the printer after a :meth:`disable` command
+
+        **Example**::
+
+            printer.disable()
+            printer.enable()
+
         """
         self._write(self._ESC + '=' + chr(1))
-
-    def ff(self):
-        """
-        Form feed. When in page mode, print data in the buffer and return back to standard mode
-        """
-        self._write('\x0c')
 
     def font(self, font='a'):
         """
         Set printer font. Most printers support two fonts i.e. 'a' or 'b', some may support a third font 'c'
 
-        Synopsis
-        --------
+        :param str font: Font for the printer, default 'a'. The font may be either 'a', 'b' or 'c' (default:'a')
+
+        **Example**::
 
             printer.font('b')
             printer.text('This text is in font b')
@@ -403,10 +400,6 @@ class Generic():
             printer.text('This text is in font a')
             printer.lf()
 
-        Parameters
-        ----------
-        font : str
-               Font for the printer, default 'a'. The font may be either 'a', 'b' or 'c' (default:'a')
         """
         if font not in self._fontMap.keys():
             raise ValueError('font must be \'a\', \'b\', \'c\'')
@@ -421,17 +414,14 @@ class Generic():
         Moves the horizontal print position relative to the left margin in 1/60th of inches. The printer ignores this
         command if the specified position is to the right of the right margin.
 
-        Synopsis
-        --------
+        :param int horizontalPosition: horizontal position from left margin in 1/60th of inches (default: 0)
+
+        **Example**::
 
             printer.lf()
             printer.horizontalPosition(100)
             printer.text('This text starts at 1/6inches from left margin')
 
-        Parameters
-        ----------
-        horizontalPosition : int
-                             horizontal position from left margin in 1/60th of inches (default: 0)
         """
         if not(0 <= horizontalPosition <= 4095) or type(horizontalPosition) is not int:
             raise ValueError('horizontalPosition must be a int between 0 and 4095 and not ' + str(horizontalPosition))
@@ -444,10 +434,12 @@ class Generic():
         """
         Print a image from a file
 
-        Parameters
-        ----------
-        path : str
-               Path to the image file to be printed
+        :param str path: Path to the image file to be printed
+
+        **Example**::
+
+            printer.image('/home/shantanu/companylogo.gif')
+
         """
         im = Image.open(path).convert("RGB")
         # Convert the RGB image in printable image
@@ -456,7 +448,8 @@ class Generic():
     def initialize(self):
         """
         Initializes the Printer. Clears the data in print buffer and resets the printer to the mode that was in effect
-        when the power was turned on. This function is automatically called on creation of printer object.
+        when the power was turned on. This function is automatically called on creation of printer object unless
+        specifically disabled.
 
         * Any macro definitions are not cleared.
         * Offline response selection is not cleared.
@@ -464,6 +457,11 @@ class Generic():
         * NV graphics (NV bit image) and NV user memory are not cleared.
         * The maintenance counter value is not affected by this command.
         * The specifying of offline response isn't cleared.
+
+        **Example**::
+
+            printer.initialize()
+
         """
         self._write(self._ESC + '@')
 
@@ -471,8 +469,9 @@ class Generic():
         """
         Invert text colors printing, switches from black on white background to white on black background
 
-        Synopsis
-        --------
+        :param bool invert: True for turning on inverted colors, False for switching off inverted colors (default: True)
+
+        **Example**::
 
             printer.invert()
             printer.text('This text is in inverted colors')
@@ -481,10 +480,6 @@ class Generic():
             printer.text('This text is not in inverted colors')
             printer.lf()
 
-        Parameters
-        ----------
-        invert : bool
-                    True for turning on inverted colors, False for switching off inverted colors (default: True)
         """
         if type(invert) is not bool:
             raise ValueError('invert must be True or False')
@@ -501,18 +496,15 @@ class Generic():
         In page mode sets the left margin to leftMargin x (horizontal motion unit) from the left edge of the printable
         area
 
-        Synopsis
-        --------
+        :param int leftMargin: Left Margin, range: 0 to 65535. If the margin exceeds the printable area, the left \
+        margin is automatically set to the maximum value of the printable area.
+
+        **Example**::
 
             printer.lf()
             printer.leftMargin(30)
             printer.text('This text has left Margin of 30')
 
-        Parameters
-        ----------
-        leftMargin : int
-                     left Margin, range from 0 to 65535. If the margin exceeds the printable area, the left margin is
-                     automatically set to the maximum value of the printable area.
         """
         if not(0 <= leftMargin <= 65535) or type(leftMargin) is not int:
             raise ValueError('leftMargin must be a int between 0 and 65535')
@@ -524,32 +516,38 @@ class Generic():
     def lf(self):
         """
         Line feed. Moves to the next line. You can substitute this method with printer.text('\\n')
+
+        **Example**::
+
+            printer.lf()
+
         """
         self._write('\n')
 
     def lineSpacing(self, lineSpacing=30, commandSet='3'):
         """
-        Set line character spacing
+        Set line character spacing, note that some printers may not support all commandsets for setting a line spacing.
+        The most commonly available commandSet('3') is chosen by default.
 
-        Synopsis
-        --------
-        printer.lineSpacing()
-        printer.text('This text has 1/6 inch line spacing')
-        printer.lf()
-        printer.lineSpacing(5)
-        printer.text('This text has 5/60 inch line spacing')
-        printer.lf()
+        :param int lineSpacing: Line spacing, range from 0 to 255 when commandSet is '+' or '3', sets line spacing to \
+        lineSpacing/360 of an inch if commandSet is '+', lineSpacing/180 of an inch if commandSet is '3' and \
+        lineSpacing/60 of an inch if commandSet is 'A'  (default: 30)
+        :param str commandSet: ESCPOS provides three aternate commands for setting line spacing i.e. '+', '3', 'A' \
+        (default : '3').
 
-        Parameters
-        ----------
-        lineSpacing : int
-               Line spacing, range from 0 to 255, sets line spacing to lineSpacing/360 of an inch (default: 30)
-        commandSet : str
-               ESCPOS provides three aternate commands for setting line spacing in addition to the recommended '+', '3',
-               'A' (default : '3')
-               * when commandSet is '+' lineSpacing is set to lineSpacing/360 inch, 0 <= lineSpacing <= 255
-               * when commandSet is '3' lineSpacing is set to lineSpacing/180 inch, 0 <= lineSpacing <= 255
-               * when commandSet is 'A' lineSpacing is set to lineSpacing/60 inch, 0 <= lineSpacing <= 85
+        #. When commandSet is '+' lineSpacing is set to lineSpacing/360 of an inch, 0 <= lineSpacing <= 255
+        #. when commandSet is '3' lineSpacing is set to lineSpacing/180 of an inch, 0 <= lineSpacing <= 255
+        #. when commandSet is 'A' lineSpacing is set to lineSpacing/60 of an inch, 0 <= lineSpacing <= 85
+
+        **Example**::
+
+            printer.lineSpacing()
+            printer.text('This text has 1/6 inch line spacing')
+            printer.lf()
+            printer.lineSpacing(5)
+            printer.text('This text has 5/60 inch line spacing')
+            printer.lf()
+
         """
         if commandSet not in ['+', '3', 'A']:
             raise ValueError('commandSet must be either \'+\', \'3\' or \'A\'')
@@ -565,16 +563,24 @@ class Generic():
         """
         Set Print area width for the thermal printer, In Standard mode, sets the print area width to
 
-            width x basic calculated pitch
+            *width x basic calculated pitch*
 
-        This command is effective only when processed at the top of the line when standard mode is being used.
-        Printable area width setting is effective until init is executed, the printer is reset, or the power is turned
-        off.
+        :param int width: 16 bits value range, i.e. int between 0 to 65535 specifying print area width in basic \
+        calculated pitch
 
-        Parameters
-        ----------
-        width : int
-                16 bits value, range between 0 to 65535 specifying print area width in basic calculated pitch
+        This command is effective only when processed at the beginning of the line when standard mode is being used.
+        Printable area width setting is effective until initialize is executed, the printer is reset, or the power is
+        turned off.
+
+        **Example**::
+
+            printer.lf()
+            printer.printAreaWidth(200)
+            printer.text('Set print area width to 200')
+            printer.lf()
+            printer.text('1234567890123456789012345678901234567890123456789012345678901234567890')
+            printer.printAreaWidth()
+
         """
         if type(width) is not int:
             raise ValueError("width must be a int")
@@ -587,7 +593,13 @@ class Generic():
         """
         Print QR Code for the provided string
 
-        @param text : Text to be printed to the QR code
+        :param str text: Text to be printed to the QR code
+
+        **Example**::
+
+            printer.qr('My name is Shantanu Bhadoria')
+            printer.qr('WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;')  # Create a QR code for connecting to a Wifi
+
         """
         qr_code = qrcode.QRCode(version=4, box_size=4, border=1)
         qr_code.add_data(text)
@@ -600,17 +612,14 @@ class Generic():
         """
         Rotates printing by 90 degrees
 
-        Synopsis
-        --------
+        :param bool rotate: Rotate by 90 degrees if True, else set to normal style (default: True)
+
+        **Example**::
 
             printer.lf()
             printer.rotate90(100)
             printer.text('This text is rotated 90 degrees')
 
-        Parameters
-        ----------
-        rotate : bool
-                 rotate by 90 degrees if True, else set to normal style (default: True)
         """
         self._write(self._ESC + 'V' + ('\x01' if rotate else '\x00'))
 
@@ -619,6 +628,11 @@ class Generic():
         Moves the cursor to next horizontal tab position like a '\\t'. This command is ignored unless the next
         horizontal tab position has been set. You may substitute this command with a printer.text('\\t') as well. See
         tabPositions() to understand the best way to use tabs to print out beautiul receipts.
+
+        **Example**::
+
+            printer.tab()
+
         """
         self._write('\t')
 
@@ -628,26 +642,24 @@ class Generic():
         printing receipts and bills as this allows you to set one tab position for the prices. so after printing the plu
         name, add a tab to immediately move to the tab position to print the price. e.g.
 
-        Synopsis
-        --------
+        :param list positions: A list of **int(s)** specifying tab positions e.g. [8,16,24,32,40]
 
-            printer.tabPositions([5, 32])
+        **Example**::
+
+            printer.tabPositions([3, 32])
             for plu in plus:
                 printer.text(plu.quantity)
+                printer.tab()
                 printer.text(' x ' + plu.name)
                 printer.tab()
                 printer.text('$' + plu.price)
 
-        This would print a well aligned receipt like so:
+        This would print a well aligned receipt like so::
 
-            2  x Guiness Beer              $24.00
-            23 x Pizza                     $500.50
+            10 x Guiness Beer              $24.00
+            2  x Pizza                     $500.50
             1  x Tandoori Chicken          $50.20
 
-        Parameters
-        ----------
-        positions : list
-                    A list of numbers specifying tab positions e.g. [8,16,24,32,40]
         """
         chrPositions = ''
         for position in positions:
@@ -659,21 +671,18 @@ class Generic():
         Sets font text Size. Note that many printers will not support the full range of text heights and widths, e.g.
         many models may only support a maximum height and width of 8
 
-        Synposis
-        --------
-        printer.textSize(2,3)
-        printer.text('This text is double height and thrice the width')
-        printer.lf()
-        printer.textSize(1,4)
-        printer.text('This text is normal height and quadruple width')
-        printer.lf()
+        :param int height: Text height, range from 1 to 16 (default: 0)
+        :param int width: Text width, range from 1 to 16 (default: 0)
 
-        Parameters
-        ----------
-        height : int
-               Text height, range from 1 to 16 (default: 0)
-        width : int
-               Text width, range from 1 to 16 (default: 0)
+        **Example**::
+
+            printer.textSize(2,3)
+            printer.text('This text is double height and thrice the width')
+            printer.lf()
+            printer.textSize(1,4)
+            printer.text('This text is normal height and quadruple width')
+            printer.lf()
+
         """
         if not(0 < height < 17) or type(height) is not int:
             raise ValueError('height must be a int between 1 and 16')
@@ -687,8 +696,12 @@ class Generic():
         """
         Puts a underline under the text
 
-        Synopsis
-        --------
+        :param bool underline: True for turning on font underline, False for switching off font underline (default: \
+        True)
+        :param bool doubleDot: True for double dot width underline, False for single dot width underline (default : \
+        False).
+
+        **Example**::
 
             printer.underline()
             printer.text('This text is underlined text')
@@ -700,13 +713,6 @@ class Generic():
             printer.text('This text is not underlined')
             printer.lf()
 
-        Parameters
-        ----------
-        underline : bool
-                    True for turning on font underline, False for switching off font underline (default: True)
-        doubleDot : bool
-                    True for double dot width underline, False for single dot width underline (default : False)
-                    This option doesn't have any effect when usePrintMode is set to True for the printer
         """
         if type(underline) is not bool:
             raise ValueError('underline must be True or False')
@@ -726,8 +732,10 @@ class Generic():
         """
         Upside down text printing
 
-        Synopsis
-        --------
+        :param bool upsideDown: True for turning on upside down printing, False for switching off upside down printing \
+        (default: True)
+
+        **Example**::
 
             printer.upsideDown()
             printer.text('This text is upside down')
@@ -736,11 +744,6 @@ class Generic():
             printer.text('This text is not upside down')
             printer.lf()
 
-        Parameters
-        ----------
-        upsideDown : bool
-                    True for turning on upside down printing, False for switching off upside down printing
-                    (default: True)
         """
         if type(upsideDown) is not bool:
             raise ValueError('upsideDown must be True or False')

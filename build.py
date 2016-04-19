@@ -11,7 +11,7 @@ use_plugin("python.pylint")
 use_plugin("python.sphinx")
 use_plugin('pypi:pybuilder_header_plugin')
 
-url = 'https://github.com/shantanubhadoria/python-escpos'
+url = 'https://github.com/shantanubhadoria/python-printer-escpos'
 description = 'Please visit {0} for more information!'.format(url)
 
 authors = [Author('Shantanu Bhadoria', 'shantanu@cpan.org')]
@@ -33,7 +33,7 @@ def set_dependencies(project):
 
 @init
 def set_properties(project):
-    project.set_property('coverage_exceptions',['escpos.USB'])
+    project.set_property('coverage_exceptions',['escpos.connections'])
     project.set_property('pybuilder_header_plugin_break_build', True)
 
     project.set_property('flake8_verbose_output', True)

@@ -96,9 +96,9 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/python-escpos.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/printer-escpos.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/python-escpos.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/printer-escpos.qhc"
 
 .PHONY: applehelp
 applehelp:
@@ -115,8 +115,8 @@ devhelp:
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/python-escpos"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/python-escpos"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/printer-escpos"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/printer-escpos"
 	@echo "# devhelp"
 
 .PHONY: epub
