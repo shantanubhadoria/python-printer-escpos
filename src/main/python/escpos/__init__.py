@@ -3,7 +3,7 @@ Installation
 ############
 ::
 
-    pip install printer-escpos
+    pip install python-printer-escpos
 
 ESCPOS printer function reference
 #################################

@@ -28,6 +28,7 @@ def set_dependencies(project):
 
     # Runtime dependencies
     project.depends_on("pyusb")
+    project.depends_on("pyserial")
     project.depends_on("Pillow")
     project.depends_on("qrcode")
 

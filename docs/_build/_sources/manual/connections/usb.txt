@@ -81,7 +81,7 @@ Creating the printer object
 Using the above values we can now create a printer object and start talking to our printer::
 
     from escpos.connections import getUSBPrinter
-    
+
 
     printer = getUSBPrinter()(idVendor=0x1504,  # USB vendor and product Ids for Bixolon SRP-350plus
                               idProduct=0x0006  # printer

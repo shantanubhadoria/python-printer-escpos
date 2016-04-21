@@ -1,5 +1,7 @@
 import usb.core
 import usb.util
+import serial
+import socket
 
 import importlib
 
@@ -61,8 +63,8 @@ def getUSBPrinter(commandSet='Generic'):
             """
             :param int idVendor: 2 byte int(Can be provided in hex representation like 0x1504). Vendor Id for the USB \
             Device.
-            :param int idProduct: 2 byte int(Can be provided in hex representation like 0x0006). Product Id for the USB \
-            Device.
+            :param int idProduct: 2 byte int(Can be provided in hex representation like 0x0006). Product Id for the \
+            USB Device.
             :param int interface: number(hex), USB Input end point \
                 Retrieve this value with the following command on UNIX like OSes (default: 0)
 
@@ -136,6 +138,7 @@ def getUSBPrinter(commandSet='Generic'):
 
     return USBPrinter
 
+
 def getSerialPrinter(commandSet='Generic'):
     """
 
@@ -182,9 +185,9 @@ def getSerialPrinter(commandSet='Generic'):
         def __init__(self, dev='/dev/ttyS0', baudrate=9600, bytesize=8, parity=serial.PARITY_NONE,
                      stopbits=serial.STOPBITS_ONE, timeout=1.00, dsrdtr=True, initialize=True):
             """
-            :param str dev: A string representing the device. For Unix like systems this would be a devicefile pointing \
-            to the printer like `/dev/ttyS0`. For windows systems this would be a windows serial port address like `COM1`, \
-            `COM2`, `COM3`. (default: /dev/ttyS0)
+            :param str dev: A string representing the device. For Unix like systems this would be a devicefile \
+            pointing to the printer like `/dev/ttyS0`. For windows systems this would be a windows serial port address \
+            like `COM1`, `COM2`, `COM3`. (default: /dev/ttyS0)
             :param int baudrate: Baudrate for your printer's serial port.(default: 9600)
             :param int bytesize: buts of data sent in each chunk over the serial port. Possible values 5,6,7,8 \
             (default:8).
@@ -249,6 +252,7 @@ def getSerialPrinter(commandSet='Generic'):
             self._device = None
 
     return SerialPrinter
+
 
 def getNetworkPrinter(commandSet='Generic'):
     """
@@ -340,6 +344,7 @@ def getNetworkPrinter(commandSet='Generic'):
 
     return NetworkPrinter
 
+
 def getFilePrinter(commandSet='Generic'):
     """
     This method does not allow two way communication with the printer and status retiieval and read commands will not
@@ -383,8 +388,8 @@ def getFilePrinter(commandSet='Generic'):
 
         def __init__(self, dev='/dev/ttyS0', initialize=True):
             """
-            :param str dev: A string representing the device. For Unix like systems this would be a serial or USB devicefile
-            pointing to the printer like `/dev/ttyS0`. (default: /dev/ttyS0)
+            :param str dev: A string representing the device. For Unix like systems this would be a serial or USB \
+            devicefile pointing to the printer like `/dev/ttyS0`. (default: /dev/ttyS0)
             :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)
             """
             self.dev = dev

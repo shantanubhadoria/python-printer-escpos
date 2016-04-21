@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>escpos.connections &mdash; printer-escpos 0.0.1a documentation</title>
+    <title>escpos.connections &mdash; python-printer-escpos 0.0.1a documentation</title>
     
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="printer-escpos 0.0.1a documentation" href="../../index.html" />
+    <link rel="top" title="python-printer-escpos 0.0.1a documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-printer-escpos 0.0.1a documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -49,6 +49,8 @@
   <h1>Source code for escpos.connections</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">usb.core</span>
 <span class="kn">import</span> <span class="nn">usb.util</span>
+<span class="kn">import</span> <span class="nn">serial</span>
+<span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="kn">import</span> <span class="nn">importlib</span>
 
@@ -110,8 +112,8 @@
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            :param int idVendor: 2 byte int(Can be provided in hex representation like 0x1504). Vendor Id for the USB \</span>
 <span class="sd">            Device.</span>
-<span class="sd">            :param int idProduct: 2 byte int(Can be provided in hex representation like 0x0006). Product Id for the USB \</span>
-<span class="sd">            Device.</span>
+<span class="sd">            :param int idProduct: 2 byte int(Can be provided in hex representation like 0x0006). Product Id for the \</span>
+<span class="sd">            USB Device.</span>
 <span class="sd">            :param int interface: number(hex), USB Input end point \</span>
 <span class="sd">                Retrieve this value with the following command on UNIX like OSes (default: 0)</span>
 
@@ -185,6 +187,7 @@
 
     <span class="k">return</span> <span class="n">USBPrinter</span></div>
 
+
 <div class="viewcode-block" id="getSerialPrinter"><a class="viewcode-back" href="../../modules/escpos.html#escpos.connections.getSerialPrinter">[docs]</a><span class="k">def</span> <span class="nf">getSerialPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
@@ -231,9 +234,9 @@
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="s1">&#39;/dev/ttyS0&#39;</span><span class="p">,</span> <span class="n">baudrate</span><span class="o">=</span><span class="mi">9600</span><span class="p">,</span> <span class="n">bytesize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">parity</span><span class="o">=</span><span class="n">serial</span><span class="o">.</span><span class="n">PARITY_NONE</span><span class="p">,</span>
                      <span class="n">stopbits</span><span class="o">=</span><span class="n">serial</span><span class="o">.</span><span class="n">STOPBITS_ONE</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="n">dsrdtr</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            :param str dev: A string representing the device. For Unix like systems this would be a devicefile pointing \</span>
-<span class="sd">            to the printer like `/dev/ttyS0`. For windows systems this would be a windows serial port address like `COM1`, \</span>
-<span class="sd">            `COM2`, `COM3`. (default: /dev/ttyS0)</span>
+<span class="sd">            :param str dev: A string representing the device. For Unix like systems this would be a devicefile \</span>
+<span class="sd">            pointing to the printer like `/dev/ttyS0`. For windows systems this would be a windows serial port address \</span>
+<span class="sd">            like `COM1`, `COM2`, `COM3`. (default: /dev/ttyS0)</span>
 <span class="sd">            :param int baudrate: Baudrate for your printer&#39;s serial port.(default: 9600)</span>
 <span class="sd">            :param int bytesize: buts of data sent in each chunk over the serial port. Possible values 5,6,7,8 \</span>
 <span class="sd">            (default:8).</span>
@@ -298,6 +301,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">return</span> <span class="n">SerialPrinter</span></div>
+
 
 <div class="viewcode-block" id="getNetworkPrinter"><a class="viewcode-back" href="../../modules/escpos.html#escpos.connections.getNetworkPrinter">[docs]</a><span class="k">def</span> <span class="nf">getNetworkPrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -389,6 +393,7 @@
 
     <span class="k">return</span> <span class="n">NetworkPrinter</span></div>
 
+
 <div class="viewcode-block" id="getFilePrinter"><a class="viewcode-back" href="../../modules/escpos.html#escpos.connections.getFilePrinter">[docs]</a><span class="k">def</span> <span class="nf">getFilePrinter</span><span class="p">(</span><span class="n">commandSet</span><span class="o">=</span><span class="s1">&#39;Generic&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This method does not allow two way communication with the printer and status retiieval and read commands will not</span>
@@ -432,8 +437,8 @@
 
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="s1">&#39;/dev/ttyS0&#39;</span><span class="p">,</span> <span class="n">initialize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            :param str dev: A string representing the device. For Unix like systems this would be a serial or USB devicefile</span>
-<span class="sd">            pointing to the printer like `/dev/ttyS0`. (default: /dev/ttyS0)</span>
+<span class="sd">            :param str dev: A string representing the device. For Unix like systems this would be a serial or USB \</span>
+<span class="sd">            devicefile pointing to the printer like `/dev/ttyS0`. (default: /dev/ttyS0)</span>
 <span class="sd">            :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="n">dev</span>
@@ -502,7 +507,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">printer-escpos 0.0.1a documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">python-printer-escpos 0.0.1a documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
