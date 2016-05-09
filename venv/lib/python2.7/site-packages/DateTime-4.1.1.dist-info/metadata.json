@@ -1,0 +1,1 @@
+{"extensions": {"python.details": {"document_names": {"description": "DESCRIPTION.rst"}}}, "extras": [], "generator": "bdist_wheel (0.29.0)", "metadata_version": "2.0", "name": "DateTime", "run_requires": [{"requires": ["pytz", "zope.interface"]}], "summary": "This package provides a DateTime data type, as known from Zope 2.", "version": "4.1.1"}

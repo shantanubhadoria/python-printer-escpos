@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to python-printer-escpos’s documentation! &mdash; python-printer-escpos 0.0.1a documentation</title>
+    <title>Welcome to python-printer-escpos’s documentation! &mdash; python-printer-escpos 0.0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.1a',
+        VERSION:     '0.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="python-printer-escpos 0.0.1a documentation" href="#" />
+    <link rel="top" title="python-printer-escpos 0.0.2 documentation" href="#" />
     <link rel="next" title="Manual" href="manual.html" /> 
   </head>
   <body role="document">
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="manual.html" title="Manual"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">python-printer-escpos 0.0.1a documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">python-printer-escpos 0.0.2 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -67,6 +67,8 @@
 <li class="toctree-l4"><a class="reference internal" href="manual/connections/serial.html#creating-the-printer-object">Creating the printer object</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="manual/connections/network.html">Network Printers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual/connections/file.html">Use Printer device file directly on UNIX like OSes</a></li>
 </ul>
 </li>
 </ul>
@@ -76,8 +78,214 @@
 </div>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Get some prerequisites first for image printing etc.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">Pillow</span>
+</pre></div>
+</div>
+<p>Install python-printer-escpos</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">printer</span><span class="o">-</span><span class="n">escpos</span>
 </pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="generic-printer-commands">
+<h2>Generic printer commands<a class="headerlink" href="#generic-printer-commands" title="Permalink to this headline">¶</a></h2>
+<p>See the full list of available default commands at <a class="reference internal" href="modules/escpos.commandset.html"><span class="doc">escpos.commandset package</span></a></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.connections</span> <span class="k">import</span> <span class="n">getUSBPrinter</span>
+
+
+<span class="n">printer</span> <span class="o">=</span> <span class="n">getUSBPrinter</span><span class="p">()(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x1504</span><span class="p">,</span>
+                          <span class="n">idProduct</span><span class="o">=</span><span class="mh">0x0006</span>
+                          <span class="n">inputEndPoint</span><span class="o">=</span><span class="mh">0x82</span><span class="p">,</span>
+                          <span class="n">outputEndPoint</span><span class="o">=</span><span class="mh">0x01</span><span class="p">)</span> <span class="c1"># Create the printer object with the connection params</span>
+
+<span class="n">printer</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="s1">&#39;/home/shantanu/companylogo.gif&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">align</span><span class="p">(</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is center aligned&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">barcode</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;Shantanu&#39;</span><span class="p">,</span> <span class="n">textPosition</span><span class="o">=</span><span class="s1">&#39;below&#39;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="s1">&#39;CODE93&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">bold</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is bold text&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">bold</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is not bold&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">charSpacing</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text has normal right char spacing&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">charSpacing</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text has 5 right char spacing&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">color</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is in primary color&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">color</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is in color 1&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">doubleHeight</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is double height text&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">doubleHeight</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is not double height&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">doubleStrike</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is double strike text&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">doubleStrike</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is not double strike&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">doubleWidth</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is double width text&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">doubleWidth</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is not double width&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">font</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is in font b&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">font</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is in font a&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is in inverted colors&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is not in inverted colors&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">leftMargin</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text has left Margin of 30&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lineSpacing</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text has 1/6 inch line spacing&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lineSpacing</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text has 5/60 inch line spacing&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">printAreaWidth</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;Set print area width to 200&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;1234567890123456789012345678901234567890123456789012345678901234567890&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">printAreaWidth</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="s1">&#39;My name is Shantanu Bhadoria&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="s1">&#39;WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;&#39;</span><span class="p">)</span>  <span class="c1"># Create a QR code for connecting to a Wifi</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">rotate90</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is rotated 90 degrees&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">tabPositions</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">plu</span> <span class="ow">in</span> <span class="n">plus</span><span class="p">:</span>
+    <span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">plu</span><span class="o">.</span><span class="n">quantity</span><span class="p">)</span>
+    <span class="n">printer</span><span class="o">.</span><span class="n">tab</span><span class="p">()</span>
+    <span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39; x &#39;</span> <span class="o">+</span> <span class="n">plu</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">printer</span><span class="o">.</span><span class="n">tab</span><span class="p">()</span>
+    <span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;$&#39;</span> <span class="o">+</span> <span class="n">plu</span><span class="o">.</span><span class="n">price</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">underline</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is underlined text&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">underline</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is double dot width underlined text&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">underline</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is not underlined&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">upsideDown</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is upside down&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">upsideDown</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text is not upside down&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">horizontalPosition</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s1">&#39;This text starts at 1/6inches from left margin&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">cutPaper</span><span class="p">()</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">drawerKickPulse</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To run the commands first you must create a printer object as explained in the next section</p>
+</div>
+<div class="section" id="creating-printer-objects">
+<h2>Creating printer objects<a class="headerlink" href="#creating-printer-objects" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="usb-printer">
+<h3>USB Printer<a class="headerlink" href="#usb-printer" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="advanced-usage">
+<h4>Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">¶</a></h4>
+<p>See <a class="reference internal" href="manual/connections/usb.html"><span class="doc">USB Printers</span></a></p>
+</div>
+<div class="section" id="synopsis">
+<h4>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.connections</span> <span class="k">import</span> <span class="n">getUSBPrinter</span>
+
+
+<span class="n">printer</span> <span class="o">=</span> <span class="n">getUSBPrinter</span><span class="p">()(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x1504</span><span class="p">,</span>
+                          <span class="n">idProduct</span><span class="o">=</span><span class="mh">0x0006</span>
+                          <span class="n">inputEndPoint</span><span class="o">=</span><span class="mh">0x82</span><span class="p">,</span>
+                          <span class="n">outputEndPoint</span><span class="o">=</span><span class="mh">0x01</span><span class="p">)</span> <span class="c1"># Create the printer object with the connection params</span>
+
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="network-printer">
+<h3>Network Printer<a class="headerlink" href="#network-printer" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h4>Advanced Usage<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<p>See <a class="reference internal" href="manual/connections/network.html"><span class="doc">Network Printers</span></a></p>
+</div>
+<div class="section" id="synposis">
+<h4>Synposis<a class="headerlink" href="#synposis" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.connections</span> <span class="k">import</span> <span class="n">getNetworkPrinter</span>
+
+
+<span class="n">printer</span> <span class="o">=</span> <span class="n">getNetworkPrinter</span><span class="p">()(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;192.168.0.20&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">9100</span><span class="p">)</span>
+
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="serial-printer">
+<h3>Serial Printer<a class="headerlink" href="#serial-printer" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h4>Advanced Usage<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>See <a class="reference internal" href="manual/connections/serial.html"><span class="doc">Serial Printers</span></a></p>
+</div>
+<div class="section" id="id3">
+<h4>Synposis<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.connections</span> <span class="k">import</span> <span class="n">getSerialPrinter</span>
+
+
+<span class="n">printer</span> <span class="o">=</span> <span class="n">getSerialPrinter</span><span class="p">()(</span><span class="n">dev</span><span class="o">=</span><span class="s1">&#39;/dev/ttyS0&#39;</span><span class="p">,</span>
+                          <span class="n">baudrate</span><span class="o">=</span><span class="mi">9600</span><span class="p">)</span>
+
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="device-file-printer">
+<h3>Device File Printer<a class="headerlink" href="#device-file-printer" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h4>Advanced Usage<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>See <a class="reference internal" href="manual/connections/file.html"><span class="doc">Use Printer device file directly on UNIX like OSes</span></a></p>
+</div>
+<div class="section" id="id5">
+<h4>Synposis<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">escpos.connections</span> <span class="k">import</span> <span class="n">getFilePrinter</span>
+
+
+<span class="n">printer</span> <span class="o">=</span> <span class="n">getFilePrinter</span><span class="p">()(</span><span class="n">dev</span><span class="o">=</span><span class="s1">&#39;/dev/ttys2&#39;</span><span class="p">)</span>
+
+<span class="n">printer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">lf</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -99,6 +307,33 @@
   <ul>
 <li><a class="reference internal" href="#">Welcome to python-printer-escpos&#8217;s documentation!</a></li>
 <li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#generic-printer-commands">Generic printer commands</a></li>
+<li><a class="reference internal" href="#creating-printer-objects">Creating printer objects</a><ul>
+<li><a class="reference internal" href="#usb-printer">USB Printer</a><ul>
+<li><a class="reference internal" href="#advanced-usage">Advanced Usage</a></li>
+<li><a class="reference internal" href="#synopsis">Synopsis</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#network-printer">Network Printer</a><ul>
+<li><a class="reference internal" href="#id1">Advanced Usage</a></li>
+<li><a class="reference internal" href="#synposis">Synposis</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#serial-printer">Serial Printer</a><ul>
+<li><a class="reference internal" href="#id2">Advanced Usage</a></li>
+<li><a class="reference internal" href="#id3">Synposis</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#device-file-printer">Device File Printer</a><ul>
+<li><a class="reference internal" href="#id4">Advanced Usage</a></li>
+<li><a class="reference internal" href="#id5">Synposis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
@@ -138,7 +373,7 @@
         <li class="right" >
           <a href="manual.html" title="Manual"
              >next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">python-printer-escpos 0.0.1a documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">python-printer-escpos 0.0.2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

@@ -10,3 +10,5 @@ your model. Note that for FilePrinter connections read functions are not availab
 
    connections/usb
    connections/serial
+   connections/network
+   connections/file
