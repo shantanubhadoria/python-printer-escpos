@@ -57,7 +57,6 @@ def getUSBPrinter(commandSet='Generic'):
         namespace by default Generic command set is loaded
 
         """
-        _device = None
 
         def __init__(self, idVendor, idProduct, interface=0, inputEndPoint=0x82, outputEndPoint=0x01, initialize=True):
             """
@@ -180,7 +179,6 @@ def getSerialPrinter(commandSet='Generic'):
         namespace by default Generic command set is loaded
 
         """
-        _device = None
 
         def __init__(self, dev='/dev/ttyS0', baudrate=9600, bytesize=8, parity=serial.PARITY_NONE,
                      stopbits=serial.STOPBITS_ONE, timeout=1.00, dsrdtr=True, initialize=True):
@@ -291,7 +289,6 @@ def getNetworkPrinter(commandSet='Generic'):
         namespace by default Generic command set is loaded
 
         """
-        _device = None
 
         def __init__(self, host, port=9100, initialize=True):
             """
@@ -384,7 +381,6 @@ def getFilePrinter(commandSet='Generic'):
         namespace by default Generic command set is loaded
 
         """
-        _device = None
 
         def __init__(self, dev='/dev/ttyS0', initialize=True):
             """
