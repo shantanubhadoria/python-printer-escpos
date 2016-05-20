@@ -24,34 +24,22 @@ class Generic():
     This is a generic(and default) commandset that works for most of the ESCPOS compliant printers.
     """
 
-    # Command code configurations
-    #: Setting this to true makes the package keep track of font style, bold, height, width and underline
-    #: statuses internally and use printmode to set these values everytime any one of them is updated. Set
-    #: this to False if you prefer to set only individual text styles when you run font(), bold(), height(),
-    #: width() or underline() commands. You should ignore this attribut in most cases.
-    usePrintMode = False
-    _textFont = 'a'
-    _textBold = False
-    _textUnderline = False
-    _textDoubleHeight = False
-    _textDoubleWidth = False
-
     # ESCPOS Codes
-    _ESC = '\x1b'
-    _GS = '\x1d'
-    _DLE = '\x10'
-    _FS = '\x1c'
+    __ESC = '\x1b'
+    __GS = '\x1d'
+    __DLE = '\x10'
+    __FS = '\x1c'
 
     # Level 2 ESCPOS Codes
-    _FF = '\x0c'
-    _SP = '\x20'
-    _EOT = '\x04'
-    _DC4 = '\x14'
+    __FF = '\x0c'
+    __SP = '\x20'
+    __EOT = '\x04'
+    __DC4 = '\x14'
 
     # Barcode Codes
-    _barcode_textPositionCode = {'none': chr(0), 'above': chr(1), 'below': chr(2), 'aboveandbelow': chr(3)}
-    _barcode_fontCode = {'a': chr(0), 'b': chr(1)}
-    _barcode_systemCode = {
+    __barcode_textPositionCode = {'none': chr(0), 'above': chr(1), 'below': chr(2), 'aboveandbelow': chr(3)}
+    __barcode_fontCode = {'a': chr(0), 'b': chr(1)}
+    __barcode_systemCode = {
         'UPC-A': 0,
         'UPC-E': 1,
         'JAN13': 2,
@@ -64,16 +52,25 @@ class Generic():
     }
 
     # Text maps
-    _fontMap = {'a': '\x00', 'b': '\x01', 'c': '\x02'}
-    _alignMap = {'left': '\x00', 'center': '\x01', 'right': '\x02', 'full': '\x03'}
+    __fontMap = {'a': '\x00', 'b': '\x01', 'c': '\x02'}
+    __alignMap = {'left': '\x00', 'center': '\x01', 'right': '\x02', 'full': '\x03'}
 
     # Image resize codes
-    _image_size = {
+    __imageSize = {
         '1x1': '\x1d\x76\x30\x00',
         '2w': '\x1d\x76\x30\x01',
         '2h': '\x1d\x76\x30\x02',
         '2x2': '\x1d\x76\x30\x03'
     }
+
+    def __init__(self):
+        # Command code configurations
+        self.__usePrintMode = False
+        self.__textFont = 'a'
+        self.__textBold = False
+        self.__textUnderline = False
+        self.__textDoubleHeight = False
+        self.__textDoubleWidth = False
 
     def align(self, align='left'):
         """
@@ -101,7 +98,7 @@ class Generic():
         if align not in ['left', 'center', 'right', 'full']:
             raise ValueError('align must be \'left\', \'center\', \'right\' or \'full\'')
         else:
-            self._write(self._ESC + 'a' + self._alignMap[align])
+            self._write(self.__class__.__ESC + 'a' + self.__class__.__alignMap[align])
 
     def barcode(self, text="shantanu", textPosition='below', font='b', height=50, width=2, system='CODE93'):
         """
@@ -122,32 +119,32 @@ class Generic():
 
         """
         # Setting position of HRI text relative to the barcode
-        if textPosition.lower() in self._barcode_textPositionCode.keys():
-            self._write(self._GS + 'H' + self._barcode_textPositionCode[textPosition.lower()])
+        if textPosition.lower() in self.__class__.__barcode_textPositionCode.keys():
+            self._write(self.__class__.__GS + 'H' + self.__class__.__barcode_textPositionCode[textPosition.lower()])
         else:
             raise ValueError('Barcode text position must be \'none\', \'above\', \'below\' or \'aboveandbelow\'')
 
         # Setting the font
-        if font.lower() in self._barcode_fontCode.keys():
-            self._write(self._GS + 'f' + self._barcode_fontCode[font.lower()])
+        if font.lower() in self.__class__.__barcode_fontCode.keys():
+            self._write(self.__class__.__GS + 'f' + self.__class__.__barcode_fontCode[font.lower()])
         else:
             raise ValueError('Barcode font must be \'a\' or \'b\'')
 
         # Setting the height
         if height >= 2:
-            self._write(self._GS + 'h' + chr(height))
+            self._write(self.__class__.__GS + 'h' + chr(height))
         else:
             raise ValueError('Barcode height %c not within range 2 to infinity' % (height,))
 
         # Setting the width
         if width >= 2 and width <= 6:
-            self._write(self._GS + 'w' + chr(width))
+            self._write(self.__class__.__GS + 'w' + chr(width))
         else:
             raise ValueError('Barcode width %c not within range 2 to 6' % (width,))
 
         # Setting barcode format/system
-        if system.upper() in self._barcode_systemCode.keys():
-            self._write(self._GS + 'k' + chr(self._barcode_systemCode[system.upper()] + 65))
+        if system.upper() in self.__class__.__barcode_systemCode.keys():
+            self._write(self.__class__.__GS + 'k' + chr(self.__class__.__barcode_systemCode[system.upper()] + 65))
         else:
             raise ValueError('Barcode system must be \'UPC-A\', \'UPC-E\', \'JAN13\', \'JAN8\', \'CODE39\', \'ITF\', \
             \'CODABAR\', \'CODE93\', \'CODE128\'')
@@ -184,13 +181,13 @@ class Generic():
         """
         if type(bold) is not bool:
             raise ValueError('bold must be True or False')
-        elif self.usePrintMode:
-            self._textBold = bold
+        elif self.__usePrintMode:
+            self.__textBold = bold
             self._updatePrintMode()
         elif bold:
-            self._write(self._ESC + 'E\x01')
+            self._write(self.__class__.__ESC + 'E\x01')
         else:
-            self._write(self._ESC + 'E\x00')
+            self._write(self.__class__.__ESC + 'E\x00')
 
     def charSpacing(self, charSpacing=0):
         """
@@ -211,7 +208,7 @@ class Generic():
         if not(0 < charSpacing < 257) or type(charSpacing) is not int:
             raise ValueError('charSpacing must be a int between 1 and 256')
         else:
-            self._write(self._ESC + self._SP + chr(charSpacing - 1))
+            self._write(self.__class__.__ESC + self.__class__.__SP + chr(charSpacing - 1))
 
     def color(self, color=0):
         """
@@ -238,7 +235,7 @@ class Generic():
         if color not in [0, 1, 2, 3, 4, 5, 6, 7]:
             raise ValueError('color must be a positive integer less than and 8 or 0')
         else:
-            self._write(self._ESC + 'r' + chr(color))
+            self._write(self.__class__.__ESC + 'r' + chr(color))
 
     def cr(self):
         """
@@ -272,7 +269,7 @@ class Generic():
         else:
             value = 0 if cut == 'full' else 1
             value += 65 if feed else 0
-            self._write(self._GS + 'V' + chr(value))
+            self._write(self.__class__.__GS + 'V' + chr(value))
 
     def disable(self):
         """
@@ -285,7 +282,7 @@ class Generic():
             printer.ensable()
 
         """
-        self._write(self._ESC + '=' + chr(2))
+        self._write(self.__class__.__ESC + '=' + chr(2))
 
     def doubleHeight(self, doubleHeight=True):
         """
@@ -306,8 +303,8 @@ class Generic():
         """
         if type(doubleHeight) is not bool:
             raise ValueError('doubleHeight must be True or False')
-        elif self.usePrintMode:
-            self._textDoubleHeight = doubleHeight
+        elif self.__usePrintMode:
+            self.__textDoubleHeight = doubleHeight
             self._updatePrintMode()
 
     def doubleStrike(self, doubleStrike=True):
@@ -330,9 +327,9 @@ class Generic():
         if type(doubleStrike) is not bool:
             raise ValueError('doubleStrike must be True or False')
         elif doubleStrike:
-            self._write(self._ESC + 'G' + '\x01')
+            self._write(self.__class__.__ESC + 'G' + '\x01')
         else:
-            self._write(self._ESC + 'G' + '\x00')
+            self._write(self.__class__.__ESC + 'G' + '\x00')
 
     def doubleWidth(self, doubleWidth=True):
         """
@@ -353,8 +350,8 @@ class Generic():
         """
         if type(doubleWidth) is not bool:
             raise ValueError('doubleWidth must be True or False')
-        elif self.usePrintMode:
-            self._textDoubleWidth = doubleWidth
+        elif self.__usePrintMode:
+            self.__textDoubleWidth = doubleWidth
             self._updatePrintMode()
 
     def drawerKickPulse(self, pin=0, time=8):
@@ -371,7 +368,7 @@ class Generic():
             printer.drawerKickPulse()
 
         """
-        self._write(self._DLE + self._DC4 + '\x01' + chr(pin) + chr(time))
+        self._write(self.__class__.__DLE + self.__class__.__DC4 + '\x01' + chr(pin) + chr(time))
 
     def enable(self):
         """
@@ -383,7 +380,7 @@ class Generic():
             printer.enable()
 
         """
-        self._write(self._ESC + '=' + chr(1))
+        self._write(self.__class__.__ESC + '=' + chr(1))
 
     def font(self, font='a'):
         """
@@ -401,13 +398,13 @@ class Generic():
             printer.lf()
 
         """
-        if font not in self._fontMap.keys():
+        if font not in self.__class__.__fontMap.keys():
             raise ValueError('font must be \'a\', \'b\', \'c\'')
-        elif self.usePrintMode:
-            self._textFont = font
+        elif self.__usePrintMode:
+            self.__textFont = font
             self._updatePrintMode()
         else:
-            self._write(self._ESC + 'M' + self._fontMap[font])
+            self._write(self.__class__.__ESC + 'M' + self.__class__.__fontMap[font])
 
     def horizontalPosition(self, horizontalPosition=0):
         """
@@ -428,7 +425,7 @@ class Generic():
         else:
             nH = horizontalPosition >> 8
             nL = horizontalPosition - (nH << 8)
-            self._write(self._ESC + '$' + chr(nL) + chr(nH))
+            self._write(self.__class__.__ESC + '$' + chr(nL) + chr(nH))
 
     def image(self, path):
         """
@@ -463,7 +460,7 @@ class Generic():
             printer.initialize()
 
         """
-        self._write(self._ESC + '@')
+        self._write(self.__class__.__ESC + '@')
 
     def invert(self, invert=True):
         """
@@ -484,9 +481,9 @@ class Generic():
         if type(invert) is not bool:
             raise ValueError('invert must be True or False')
         elif invert:
-            self._write(self._GS + 'B' + '\x01')
+            self._write(self.__class__.__GS + 'B' + '\x01')
         else:
-            self._write(self._GS + 'B' + '\x00')
+            self._write(self.__class__.__GS + 'B' + '\x00')
 
     def leftMargin(self, leftMargin=10):
         """
@@ -511,7 +508,7 @@ class Generic():
         else:
             nH = leftMargin >> 8
             nL = leftMargin - (nH << 8)
-            self._write(self._GS + 'L' + chr(nL) + chr(nH))
+            self._write(self.__class__.__GS + 'L' + chr(nL) + chr(nH))
 
     def lf(self):
         """
@@ -557,7 +554,7 @@ class Generic():
         elif commandSet == 'A' and (not(0 <= lineSpacing <= 85) or type(lineSpacing) is not int):
             raise ValueError('lineSpacing must be a int between 0 and 85 when commandSet is \'A\'')
         else:
-            self._write(self._ESC + commandSet + chr(lineSpacing))
+            self._write(self.__class__.__ESC + commandSet + chr(lineSpacing))
 
     def printAreaWidth(self, width=65535):
         """
@@ -587,7 +584,7 @@ class Generic():
         else:
             nH = width >> 8
             nL = width - (nH << 8)
-            self._write(self._GS + 'W' + chr(nL) + chr(nH))
+            self._write(self.__class__.__GS + 'W' + chr(nL) + chr(nH))
 
     def qr(self, text):
         """
@@ -621,7 +618,7 @@ class Generic():
             printer.text('This text is rotated 90 degrees')
 
         """
-        self._write(self._ESC + 'V' + ('\x01' if rotate else '\x00'))
+        self._write(self.__class__.__ESC + 'V' + ('\x01' if rotate else '\x00'))
 
     def tab(self):
         """
@@ -664,7 +661,7 @@ class Generic():
         chrPositions = ''
         for position in positions:
             chrPositions += chr(position)
-        self.write(self._ESC + 'D' + chrPositions + chr(0))
+        self.write(self.__class__.__ESC + 'D' + chrPositions + chr(0))
 
     def textSize(self, height=1, width=1):
         """
@@ -690,7 +687,7 @@ class Generic():
             raise ValueError('textWidth must be a int between 1 and 16')
         else:
             size = (width - 1) << 4 | (height - 1)
-            self._write(self._GS + '!' + chr(size))
+            self._write(self.__class__.__GS + '!' + chr(size))
 
     def underline(self, underline=True, doubleDot=False):
         """
@@ -718,15 +715,15 @@ class Generic():
             raise ValueError('underline must be True or False')
         elif type(doubleDot) is not bool:
             raise ValueError('doubleDot must be True or False')
-        elif self.usePrintMode:
-            self._textUnderline = underline
+        elif self.__usePrintMode:
+            self.__textUnderline = underline
             self._updatePrintMode()
         elif underline and doubleDot:
-            self._write(self._ESC + '-\x02')
+            self._write(self.__class__.__ESC + '-\x02')
         elif underline:
-            self._write(self._ESC + '-\x01')
+            self._write(self.__class__.__ESC + '-\x01')
         else:
-            self._write(self._ESC + '-\x00')
+            self._write(self.__class__.__ESC + '-\x00')
 
     def upsideDown(self, upsideDown=True):
         """
@@ -748,13 +745,13 @@ class Generic():
         if type(upsideDown) is not bool:
             raise ValueError('upsideDown must be True or False')
         else:
-            self._write(self._ESC + '{' + ('\x01' if upsideDown else '\x00'))
+            self._write(self.__class__.__ESC + '{' + ('\x01' if upsideDown else '\x00'))
 
     def _updatePrintMode(self):
-        value = ('1' if self._textFont == 'b' else '0') + '00' + ('1' if self._textBold else '0') + \
-                ('1' if self._textDoubleHeight else '0') + ('1' if self._textDoubleWidth else '0') + \
-                ('1' if self._textUnderline else '0')
-        self._write(self._ESC + '!' + chr(int(value, 2)))
+        value = ('1' if self.__textFont == 'b' else '0') + '00' + ('1' if self.__textBold else '0') + \
+                ('1' if self.__textDoubleHeight else '0') + ('1' if self.__textDoubleWidth else '0') + \
+                ('1' if self.__textUnderline else '0')
+        self._write(self.__class__.__ESC + '!' + chr(int(value, 2)))
 
     def _check_image_size(self, size):
         """
@@ -763,11 +760,11 @@ class Generic():
         if size % 32 == 0:
             return (0, 0)
         else:
-            image_border = 32 - (size % 32)
-            if (image_border % 2) == 0:
-                return (image_border / 2, image_border / 2)
+            imageBorder = 32 - (size % 32)
+            if (imageBorder % 2) == 0:
+                return (imageBorder / 2, imageBorder / 2)
             else:
-                return (image_border / 2, (image_border / 2) + 1)
+                return (imageBorder / 2, (imageBorder / 2) + 1)
 
     def _print_image(self, line, size):
         """
@@ -777,7 +774,7 @@ class Generic():
         cont = 0
         buffer = ""
 
-        self._write(self._image_size['1x1'])
+        self._write(self.__class__.__imageSize['1x1'])
         buffer = "%02X%02X%02X%02X" % (((size[0] / size[1]) / 8), 0, size[1], 0)
         self._write(buffer.decode('hex'))
         buffer = ""
@@ -796,45 +793,45 @@ class Generic():
         """
         Parse image and prepare it to a printable format
         """
-        pix_line = ""
-        im_left = ""
-        im_right = ""
+        pixLine = ""
+        imLeft = ""
+        imRight = ""
         switch = 0
-        img_size = [0, 0]
+        imgSize = [0, 0]
 
         if im.size[0] > 512:
             print ("WARNING: Image is wider than 512 and could be truncated at print time ")
         if im.size[1] > 255:
             raise ValueError("Image Height larger than 255")
 
-        im_border = self._check_image_size(im.size[0])
-        for i in range(im_border[0]):
-            im_left += "0"
-        for i in range(im_border[1]):
-            im_right += "0"
+        imBorder = self._check_image_size(im.size[0])
+        for i in range(imBorder[0]):
+            imLeft += "0"
+        for i in range(imBorder[1]):
+            imRight += "0"
 
         for y in range(im.size[1]):
-            img_size[1] += 1
-            pix_line += im_left
-            img_size[0] += im_border[0]
+            imgSize[1] += 1
+            pixLine += imLeft
+            imgSize[0] += imBorder[0]
             for x in range(im.size[0]):
-                img_size[0] += 1
+                imgSize[0] += 1
                 RGB = im.getpixel((x, y))
-                im_color = (RGB[0] + RGB[1] + RGB[2])
-                im_pattern = "1X0"
-                pattern_len = len(im_pattern)
+                imColor = (RGB[0] + RGB[1] + RGB[2])
+                imPattern = "1X0"
+                patternLen = len(imPattern)
                 switch = (switch - 1) * (-1)
-                for x in range(pattern_len):
-                    if im_color <= (255 * 3 / pattern_len * (x + 1)):
-                        if im_pattern[x] == "X":
-                            pix_line += "%d" % switch
+                for x in range(patternLen):
+                    if imColor <= (255 * 3 / patternLen * (x + 1)):
+                        if imPattern[x] == "X":
+                            pixLine += "%d" % switch
                         else:
-                            pix_line += im_pattern[x]
+                            pixLine += imPattern[x]
                         break
-                    elif im_color > (255 * 3 / pattern_len * pattern_len) and im_color <= (255 * 3):
-                        pix_line += im_pattern[-1]
+                    elif imColor > (255 * 3 / patternLen * patternLen) and imColor <= (255 * 3):
+                        pixLine += imPattern[-1]
                         break
-            pix_line += im_right
-            img_size[0] += im_border[1]
+            pixLine += imRight
+            imgSize[0] += imBorder[1]
 
-        self._print_image(pix_line, img_size)
+        self._print_image(pixLine, imgSize)
