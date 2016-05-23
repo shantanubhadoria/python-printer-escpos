@@ -84,17 +84,17 @@ def getUSBPrinter(commandSet='Generic'):
             self.inputEndPoint = inputEndPoint
             self.outputEndPoint = outputEndPoint
 
-            self._open()
+            self.__open()
             if initialize:
                 self.initialize()
 
         def text(self, text):
             """
-            Essentially the same as _write(), Prints text to printer
+            Prints text to printer
             """
-            self._write(text)
+            self.__write(text)
 
-        def _open(self):
+        def __open(self):
             """
             Search device on USB tree and set it as escpos device
             """
@@ -115,13 +115,13 @@ def getUSBPrinter(commandSet='Generic'):
             except usb.core.USBError as e:
                 raise RuntimeError("Could not set configuration: %s" % str(e))
 
-        def _write(self, msg):
+        def __write(self, msg):
             """
             Print any command sent in raw format
             """
             self._device.write(self.outputEndPoint, msg, self.interface)
 
-        def _read(self, length):
+        def __read(self, length):
             """
             Read raw data from the USB device
             """
@@ -204,17 +204,17 @@ def getSerialPrinter(commandSet='Generic'):
             self.timeout = timeout
             self.dsrdtr = dsrdtr
 
-            self._open()
+            self.__open()
             if initialize:
                 self.initialize()
 
         def text(self, text):
             """
-            Essentially the same as _write(), Prints text to printer
+            Prints text to printer
             """
-            self._write(text)
+            self.__write(text)
 
-        def _open(self):
+        def __open(self):
             """
             Setup serial device and set it as escpos device
             """
@@ -229,13 +229,13 @@ def getSerialPrinter(commandSet='Generic'):
             if self._device is None:
                 raise RuntimeError("Unable to open serial printer on %s" % self.dev)
 
-        def _write(self, msg):
+        def __write(self, msg):
             """
             Print any command sent in raw format
             """
             self._device.write(msg)
 
-        def _read(self, length):
+        def __read(self, length):
             """
             Read raw data from the serial device
             """
@@ -299,17 +299,17 @@ def getNetworkPrinter(commandSet='Generic'):
             self.host = host
             self.port = port
 
-            self._open()
+            self.__open()
             if initialize:
                 self.initialize()
 
         def text(self, text):
             """
-            Essentially the same as _write(), Prints text to printer
+            Prints text to printer
             """
-            self._write(text)
+            self.__write(text)
 
-        def _open(self):
+        def __open(self):
             """
             Setup network printer and set it as escpos printer
             """
@@ -319,13 +319,13 @@ def getNetworkPrinter(commandSet='Generic'):
             if self._device is None:
                 raise RuntimeError("Unable to connect to network printer on %s" % self.host)
 
-        def _write(self, msg):
+        def __write(self, msg):
             """
             Print any command sent in raw format
             """
             self._device.send(msg)
 
-        def _read(self, length):
+        def __read(self, length):
             """
             Read raw data from the network printer
             """
@@ -390,17 +390,17 @@ def getFilePrinter(commandSet='Generic'):
             """
             self.dev = dev
 
-            self._open()
+            self.__open()
             if initialize:
                 self.initialize()
 
         def text(self, text):
             """
-            Essentially the same as _write(), Prints text to printer
+            Prints text to printer
             """
-            self._write(text)
+            self.__write(text)
 
-        def _open(self):
+        def __open(self):
             """
             Setup file handle and set it as escpos device
             """
@@ -409,7 +409,7 @@ def getFilePrinter(commandSet='Generic'):
             if self._device is None:
                 raise RuntimeError("Unable to open  printer file at %s" % self.dev)
 
-        def _write(self, msg):
+        def __write(self, msg):
             """
             Print any command sent in raw format
             """
