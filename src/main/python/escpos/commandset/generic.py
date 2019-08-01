@@ -835,3 +835,9 @@ class Generic():
             imgSize[0] += imBorder[1]
 
         self._print_image(pixLine, imgSize)
+
+  def __write(self, msg):
+    """ Returns a NotImplementedError if the instance of the class doesn't override this method.
+    :raises NotImplementedError
+    """
+    raise NotImplementedError()
