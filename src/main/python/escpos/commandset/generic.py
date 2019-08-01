@@ -836,8 +836,8 @@ class Generic():
 
         self._print_image(pixLine, imgSize)
 
-  def __write(self, msg):
-    """ Returns a NotImplementedError if the instance of the class doesn't override this method.
-    :raises NotImplementedError
-    """
-    raise NotImplementedError()
+    def __write(self, msg):
+        """ Returns a NotImplementedError if the instance of the class doesn't override this method.
+        :raises NotImplementedError
+        """
+       raise NotImplementedError()
