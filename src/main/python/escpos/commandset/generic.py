@@ -840,4 +840,4 @@ class Generic():
         """ Returns a NotImplementedError if the instance of the class doesn't override this method.
         :raises NotImplementedError
         """
-       raise NotImplementedError()
+        raise NotImplementedError()
