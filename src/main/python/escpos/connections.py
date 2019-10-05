@@ -78,13 +78,15 @@ def getUSBPrinter(commandSet='Generic'):
                 ``lsusb -vvv -d <vendorId in hex>:<productId in hex> | grep bEndpointAddress | grep OUT``
             :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)
             """
+            super(USBPrinter, self).__init__()
+
             self.idVendor = idVendor
             self.idProduct = idProduct
             self.interface = interface
             self.inputEndPoint = inputEndPoint
             self.outputEndPoint = outputEndPoint
 
-            self.__open()
+            self._open()
             if initialize:
                 self.initialize()
 
@@ -92,9 +94,9 @@ def getUSBPrinter(commandSet='Generic'):
             """
             Prints text to printer
             """
-            self.__write(text)
+            self._write(text)
 
-        def __open(self):
+        def _open(self):
             """
             Search device on USB tree and set it as escpos device
             """
@@ -115,13 +117,13 @@ def getUSBPrinter(commandSet='Generic'):
             except usb.core.USBError as e:
                 raise RuntimeError("Could not set configuration: %s" % str(e))
 
-        def __write(self, msg):
+        def _write(self, msg):
             """
             Print any command sent in raw format
             """
             self._device.write(self.outputEndPoint, msg, self.interface)
 
-        def __read(self, length):
+        def _read(self, length):
             """
             Read raw data from the USB device
             """
@@ -212,7 +214,7 @@ def getSerialPrinter(commandSet='Generic'):
             """
             Prints text to printer
             """
-            self.__write(text)
+            self._write(text)
 
         def __open(self):
             """
@@ -229,7 +231,7 @@ def getSerialPrinter(commandSet='Generic'):
             if self._device is None:
                 raise RuntimeError("Unable to open serial printer on %s" % self.dev)
 
-        def __write(self, msg):
+        def _write(self, msg):
             """
             Print any command sent in raw format
             """
@@ -307,7 +309,7 @@ def getNetworkPrinter(commandSet='Generic'):
             """
             Prints text to printer
             """
-            self.__write(text)
+            self._write(text)
 
         def __open(self):
             """
@@ -319,7 +321,7 @@ def getNetworkPrinter(commandSet='Generic'):
             if self._device is None:
                 raise RuntimeError("Unable to connect to network printer on %s" % self.host)
 
-        def __write(self, msg):
+        def _write(self, msg):
             """
             Print any command sent in raw format
             """
@@ -398,7 +400,7 @@ def getFilePrinter(commandSet='Generic'):
             """
             Prints text to printer
             """
-            self.__write(text)
+            self._write(text)
 
         def __open(self):
             """
@@ -409,7 +411,7 @@ def getFilePrinter(commandSet='Generic'):
             if self._device is None:
                 raise RuntimeError("Unable to open  printer file at %s" % self.dev)
 
-        def __write(self, msg):
+        def _write(self, msg):
             """
             Print any command sent in raw format
             """
