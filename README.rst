@@ -222,16 +222,35 @@ See the full list of available default commands at https://pythonhosted.org/pyth
   printer.qr('WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;')  # Create a QR code for connecting to a Wifi
   printer.lf()
 
-  printer.rotate90(100)
+  printer.rotate90(True)
   printer.text('This text is rotated 90 degrees')
+  printer.rotate90(False)
+
+  items = [
+    {
+      'quantity': 10,
+      'name':     "Guiness Beer",
+      'price':    24,
+    },
+    {
+      'quantity': 2,
+      'name':     "Pizza",
+      'price':    500.50,
+    },
+    {
+      'quantity': 1,
+      'name':     "Tandoori Chicken",
+      'price':    50.20,
+    },
+  ]
 
   printer.tabPositions([3, 32])
-  for plu in plus:
-      printer.text(plu.quantity)
+  for plu in items:
+      printer.text(str(plu['quantity']))
       printer.tab()
-      printer.text(' x ' + plu.name)
+      printer.text(' x ' + plu['name'])
       printer.tab()
-      printer.text('$' + plu.price)
+      printer.text('$' + str(plu['price']))
 
   printer.underline()
   printer.text('This text is underlined text')
