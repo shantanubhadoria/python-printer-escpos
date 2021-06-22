@@ -800,7 +800,7 @@ class Generic():
         imgSize = [0, 0]
 
         if im.size[0] > 512:
-            print ("WARNING: Image is wider than 512 and could be truncated at print time ")
+            print("WARNING: Image is wider than 512 and could be truncated at print time ")
         if im.size[1] > 255:
             raise ValueError("Image Height larger than 255")
 
