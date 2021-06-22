@@ -17,6 +17,7 @@ description = 'Please visit {0} for more information!'.format(url)
 authors = [Author('Shantanu Bhadoria', 'shantanu@cpan.org')]
 license = 'Apache License, Version 2.0'
 summary = 'Python interface for ESCPOS Printers'
+name='python-printer-escpos'
 version = '0.0.4'
 
 default_task = ['analyze', 'publish']
