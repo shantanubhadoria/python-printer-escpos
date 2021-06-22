@@ -17,7 +17,7 @@ description = 'Please visit {0} for more information!'.format(url)
 authors = [Author('Shantanu Bhadoria', 'shantanu@cpan.org')]
 license = 'Apache License, Version 2.0'
 summary = 'Python interface for ESCPOS Printers'
-version = '0.0.2'
+version = '0.0.4'
 
 default_task = ['analyze', 'publish']
 
@@ -34,7 +34,7 @@ def set_dependencies(project):
 
 @init
 def set_properties(project):
-    project.set_property('coverage_exceptions',['escpos.connections'])
+    project.set_property('coverage_exceptions',['escpos.connections','escpos.commandset.generic'])
     project.set_property('pybuilder_header_plugin_break_build', True)
 
     project.set_property('flake8_verbose_output', True)
