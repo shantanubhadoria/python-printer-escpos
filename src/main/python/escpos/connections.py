@@ -325,6 +325,8 @@ def getNetworkPrinter(commandSet='Generic'):
             """
             Print any command sent in raw format
             """
+            if(type(msg) == str) :
+               msg = str.encode(msg)
             self._device.send(msg)
 
         def __read(self, length):
