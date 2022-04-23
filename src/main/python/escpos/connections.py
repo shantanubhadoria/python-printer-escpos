@@ -206,6 +206,8 @@ def getSerialPrinter(commandSet='Generic'):
             self.timeout = timeout
             self.dsrdtr = dsrdtr
 
+            commandSetClass.__init__(self)
+
             self.__open()
             if initialize:
                 self.initialize()
@@ -301,6 +303,8 @@ def getNetworkPrinter(commandSet='Generic'):
             self.host = host
             self.port = port
 
+            commandSetClass.__init__(self)
+
             self.__open()
             if initialize:
                 self.initialize()
@@ -393,6 +397,8 @@ def getFilePrinter(commandSet='Generic'):
             :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)
             """
             self.dev = dev
+
+            commandSetClass.__init__(self)
 
             self.__open()
             if initialize:
