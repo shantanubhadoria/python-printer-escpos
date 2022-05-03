@@ -200,6 +200,7 @@ def getSerialPrinter(commandSet='Generic'):
             :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)
             """
             self.dev = dev
+            self.stopbits = stopbits
             self.baudrate = baudrate
             self.bytesize = bytesize
             self.parity = parity
@@ -243,6 +244,8 @@ def getSerialPrinter(commandSet='Generic'):
             """
             Read raw data from the serial device
             """
+            if(type(msg) == str) :
+               msg = str.encode(msg)
             self._device.read(length)
 
         def __del__(self):
