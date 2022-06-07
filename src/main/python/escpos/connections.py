@@ -200,11 +200,14 @@ def getSerialPrinter(commandSet='Generic'):
             :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)
             """
             self.dev = dev
+            self.stopbits = stopbits
             self.baudrate = baudrate
             self.bytesize = bytesize
             self.parity = parity
             self.timeout = timeout
             self.dsrdtr = dsrdtr
+
+            commandSetClass.__init__(self)
 
             self.__open()
             if initialize:
@@ -241,6 +244,8 @@ def getSerialPrinter(commandSet='Generic'):
             """
             Read raw data from the serial device
             """
+            if(type(msg) == str) :
+               msg = str.encode(msg)
             self._device.read(length)
 
         def __del__(self):
@@ -301,6 +306,8 @@ def getNetworkPrinter(commandSet='Generic'):
             self.host = host
             self.port = port
 
+            commandSetClass.__init__(self)
+
             self.__open()
             if initialize:
                 self.initialize()
@@ -325,6 +332,8 @@ def getNetworkPrinter(commandSet='Generic'):
             """
             Print any command sent in raw format
             """
+            if(type(msg) == str) :
+               msg = str.encode(msg)
             self._device.send(msg)
 
         def __read(self, length):
@@ -391,6 +400,8 @@ def getFilePrinter(commandSet='Generic'):
             :param bool initialize: Call initialize() function to reset the printer to default status.(default: True)
             """
             self.dev = dev
+
+            commandSetClass.__init__(self)
 
             self.__open()
             if initialize:
