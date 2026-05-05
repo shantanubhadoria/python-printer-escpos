@@ -228,9 +228,6 @@ def getSerialPrinter(commandSet='Generic'):
                                          timeout=self.timeout,
                                          dsrdtr=self.dsrdtr)
 
-            if self._device is None:
-                raise RuntimeError("Unable to open serial printer on %s" % self.dev)
-
         def _write(self, msg):
             """
             Print any command sent in raw format
@@ -317,9 +314,6 @@ def getNetworkPrinter(commandSet='Generic'):
             """
             self._device = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self._device.connect((self.host, self.port))
-
-            if self._device is None:
-                raise RuntimeError("Unable to connect to network printer on %s" % self.host)
 
         def _write(self, msg):
             """
