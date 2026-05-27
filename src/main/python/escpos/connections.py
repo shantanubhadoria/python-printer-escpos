@@ -408,9 +408,6 @@ def getFilePrinter(commandSet='Generic'):
             """
             self._device = open(self.dev, "wb")
 
-            if self._device is None:
-                raise RuntimeError("Unable to open  printer file at %s" % self.dev)
-
         def _write(self, msg):
             """
             Print any command sent in raw format
